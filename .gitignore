@@ -1,2 +1,4 @@
+*.qws
+
 db/
 output_files/
