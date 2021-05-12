@@ -58,8 +58,8 @@ set_location_assignment PIN_H15 -to f
 set_location_assignment PIN_AB28 -to x1
 set_location_assignment PIN_AC28 -to x2
 set_location_assignment PIN_AC27 -to x3
-set_global_assignment -name QIP_FILE nios2_subsystem/synthesis/nios2_subsystem.qip
-set_global_assignment -name VHDL_FILE src/AudioVisualizer.vhdl
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLK
 set_location_assignment PIN_Y2 -to CLK
+set_global_assignment -name QIP_FILE nios2_subsystem/synthesis/nios2_subsystem.qip
+set_global_assignment -name VHDL_FILE src/AudioVisualizer.vhdl
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
