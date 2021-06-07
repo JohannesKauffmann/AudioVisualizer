@@ -8,9 +8,6 @@ module AudioController
     parameter [4:0] dataLength = 5'd16; // 16-bits audio
 
     reg [5:0] bit_counter;
-
-    reg [15:0] tmp_data_left;
-    reg [15:0] tmp_data_right;
     
     reg [31:0] tmp_data;
 
@@ -19,7 +16,7 @@ module AudioController
         bit_counter = 5'd0;
     end
 
-    always_ff @ (negedge AUD_BCLK)
+    always_ff @ (posedge AUD_BCLK)
     begin
         if (bit_counter >= 0 && bit_counter < dataLength)
         begin
