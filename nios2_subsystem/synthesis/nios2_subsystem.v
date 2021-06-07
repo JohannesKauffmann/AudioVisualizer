@@ -4,8 +4,12 @@
 
 `timescale 1 ps / 1 ps
 module nios2_subsystem (
-		input  wire  clk_clk,       //   clk.clk
-		input  wire  reset_reset_n  // reset.reset_n
+		input  wire        clk_clk,                                     //                                  clk.clk
+		input  wire [31:0] pio_fifo_q_external_connection_export,       //       pio_fifo_q_external_connection.export
+		input  wire        pio_fifo_rdempty_external_connection_export, // pio_fifo_rdempty_external_connection.export
+		input  wire        pio_fifo_rdfull_external_connection_export,  //  pio_fifo_rdfull_external_connection.export
+		output wire        pio_fifo_rdreq_external_connection_export,   //   pio_fifo_rdreq_external_connection.export
+		input  wire        reset_reset_n                                //                                reset.reset_n
 	);
 
 	wire  [31:0] nios2_gen2_data_master_readdata;                           // mm_interconnect_0:nios2_gen2_data_master_readdata -> nios2_gen2:d_readdata
@@ -44,9 +48,20 @@ module nios2_subsystem (
 	wire         mm_interconnect_0_onchip_memory2_s1_write;                 // mm_interconnect_0:onchip_memory2_s1_write -> onchip_memory2:write
 	wire  [31:0] mm_interconnect_0_onchip_memory2_s1_writedata;             // mm_interconnect_0:onchip_memory2_s1_writedata -> onchip_memory2:writedata
 	wire         mm_interconnect_0_onchip_memory2_s1_clken;                 // mm_interconnect_0:onchip_memory2_s1_clken -> onchip_memory2:clken
+	wire  [31:0] mm_interconnect_0_pio_fifo_q_s1_readdata;                  // pio_fifo_q:readdata -> mm_interconnect_0:pio_fifo_q_s1_readdata
+	wire   [1:0] mm_interconnect_0_pio_fifo_q_s1_address;                   // mm_interconnect_0:pio_fifo_q_s1_address -> pio_fifo_q:address
+	wire         mm_interconnect_0_pio_fifo_rdreq_s1_chipselect;            // mm_interconnect_0:pio_fifo_rdreq_s1_chipselect -> pio_fifo_rdreq:chipselect
+	wire  [31:0] mm_interconnect_0_pio_fifo_rdreq_s1_readdata;              // pio_fifo_rdreq:readdata -> mm_interconnect_0:pio_fifo_rdreq_s1_readdata
+	wire   [1:0] mm_interconnect_0_pio_fifo_rdreq_s1_address;               // mm_interconnect_0:pio_fifo_rdreq_s1_address -> pio_fifo_rdreq:address
+	wire         mm_interconnect_0_pio_fifo_rdreq_s1_write;                 // mm_interconnect_0:pio_fifo_rdreq_s1_write -> pio_fifo_rdreq:write_n
+	wire  [31:0] mm_interconnect_0_pio_fifo_rdreq_s1_writedata;             // mm_interconnect_0:pio_fifo_rdreq_s1_writedata -> pio_fifo_rdreq:writedata
+	wire  [31:0] mm_interconnect_0_pio_fifo_rdfull_s1_readdata;             // pio_fifo_rdfull:readdata -> mm_interconnect_0:pio_fifo_rdfull_s1_readdata
+	wire   [1:0] mm_interconnect_0_pio_fifo_rdfull_s1_address;              // mm_interconnect_0:pio_fifo_rdfull_s1_address -> pio_fifo_rdfull:address
+	wire  [31:0] mm_interconnect_0_pio_fifo_rdempty_s1_readdata;            // pio_fifo_rdempty:readdata -> mm_interconnect_0:pio_fifo_rdempty_s1_readdata
+	wire   [1:0] mm_interconnect_0_pio_fifo_rdempty_s1_address;             // mm_interconnect_0:pio_fifo_rdempty_s1_address -> pio_fifo_rdempty:address
 	wire         irq_mapper_receiver0_irq;                                  // jtag_uart:av_irq -> irq_mapper:receiver0_irq
 	wire  [31:0] nios2_gen2_irq_irq;                                        // irq_mapper:sender_irq -> nios2_gen2:irq
-	wire         rst_controller_reset_out_reset;                            // rst_controller:reset_out -> [irq_mapper:reset, jtag_uart:rst_n, mm_interconnect_0:nios2_gen2_reset_reset_bridge_in_reset_reset, nios2_gen2:reset_n, onchip_memory2:reset, rst_translator:in_reset]
+	wire         rst_controller_reset_out_reset;                            // rst_controller:reset_out -> [irq_mapper:reset, jtag_uart:rst_n, mm_interconnect_0:nios2_gen2_reset_reset_bridge_in_reset_reset, nios2_gen2:reset_n, onchip_memory2:reset, pio_fifo_q:reset_n, pio_fifo_rdempty:reset_n, pio_fifo_rdfull:reset_n, pio_fifo_rdreq:reset_n, rst_translator:in_reset]
 	wire         rst_controller_reset_out_reset_req;                        // rst_controller:reset_req -> [nios2_gen2:reset_req, onchip_memory2:reset_req, rst_translator:reset_req_in]
 	wire         nios2_gen2_debug_reset_request_reset;                      // nios2_gen2:debug_reset_request -> rst_controller:reset_in1
 
@@ -108,6 +123,41 @@ module nios2_subsystem (
 		.freeze     (1'b0)                                            // (terminated)
 	);
 
+	nios2_subsystem_pio_fifo_q pio_fifo_q (
+		.clk      (clk_clk),                                  //                 clk.clk
+		.reset_n  (~rst_controller_reset_out_reset),          //               reset.reset_n
+		.address  (mm_interconnect_0_pio_fifo_q_s1_address),  //                  s1.address
+		.readdata (mm_interconnect_0_pio_fifo_q_s1_readdata), //                    .readdata
+		.in_port  (pio_fifo_q_external_connection_export)     // external_connection.export
+	);
+
+	nios2_subsystem_pio_fifo_rdempty pio_fifo_rdempty (
+		.clk      (clk_clk),                                        //                 clk.clk
+		.reset_n  (~rst_controller_reset_out_reset),                //               reset.reset_n
+		.address  (mm_interconnect_0_pio_fifo_rdempty_s1_address),  //                  s1.address
+		.readdata (mm_interconnect_0_pio_fifo_rdempty_s1_readdata), //                    .readdata
+		.in_port  (pio_fifo_rdempty_external_connection_export)     // external_connection.export
+	);
+
+	nios2_subsystem_pio_fifo_rdempty pio_fifo_rdfull (
+		.clk      (clk_clk),                                       //                 clk.clk
+		.reset_n  (~rst_controller_reset_out_reset),               //               reset.reset_n
+		.address  (mm_interconnect_0_pio_fifo_rdfull_s1_address),  //                  s1.address
+		.readdata (mm_interconnect_0_pio_fifo_rdfull_s1_readdata), //                    .readdata
+		.in_port  (pio_fifo_rdfull_external_connection_export)     // external_connection.export
+	);
+
+	nios2_subsystem_pio_fifo_rdreq pio_fifo_rdreq (
+		.clk        (clk_clk),                                        //                 clk.clk
+		.reset_n    (~rst_controller_reset_out_reset),                //               reset.reset_n
+		.address    (mm_interconnect_0_pio_fifo_rdreq_s1_address),    //                  s1.address
+		.write_n    (~mm_interconnect_0_pio_fifo_rdreq_s1_write),     //                    .write_n
+		.writedata  (mm_interconnect_0_pio_fifo_rdreq_s1_writedata),  //                    .writedata
+		.chipselect (mm_interconnect_0_pio_fifo_rdreq_s1_chipselect), //                    .chipselect
+		.readdata   (mm_interconnect_0_pio_fifo_rdreq_s1_readdata),   //                    .readdata
+		.out_port   (pio_fifo_rdreq_external_connection_export)       // external_connection.export
+	);
+
 	nios2_subsystem_mm_interconnect_0 mm_interconnect_0 (
 		.clk_50_clk_clk                               (clk_clk),                                                   //                             clk_50_clk.clk
 		.nios2_gen2_reset_reset_bridge_in_reset_reset (rst_controller_reset_out_reset),                            // nios2_gen2_reset_reset_bridge_in_reset.reset
@@ -146,7 +196,18 @@ module nios2_subsystem (
 		.onchip_memory2_s1_writedata                  (mm_interconnect_0_onchip_memory2_s1_writedata),             //                                       .writedata
 		.onchip_memory2_s1_byteenable                 (mm_interconnect_0_onchip_memory2_s1_byteenable),            //                                       .byteenable
 		.onchip_memory2_s1_chipselect                 (mm_interconnect_0_onchip_memory2_s1_chipselect),            //                                       .chipselect
-		.onchip_memory2_s1_clken                      (mm_interconnect_0_onchip_memory2_s1_clken)                  //                                       .clken
+		.onchip_memory2_s1_clken                      (mm_interconnect_0_onchip_memory2_s1_clken),                 //                                       .clken
+		.pio_fifo_q_s1_address                        (mm_interconnect_0_pio_fifo_q_s1_address),                   //                          pio_fifo_q_s1.address
+		.pio_fifo_q_s1_readdata                       (mm_interconnect_0_pio_fifo_q_s1_readdata),                  //                                       .readdata
+		.pio_fifo_rdempty_s1_address                  (mm_interconnect_0_pio_fifo_rdempty_s1_address),             //                    pio_fifo_rdempty_s1.address
+		.pio_fifo_rdempty_s1_readdata                 (mm_interconnect_0_pio_fifo_rdempty_s1_readdata),            //                                       .readdata
+		.pio_fifo_rdfull_s1_address                   (mm_interconnect_0_pio_fifo_rdfull_s1_address),              //                     pio_fifo_rdfull_s1.address
+		.pio_fifo_rdfull_s1_readdata                  (mm_interconnect_0_pio_fifo_rdfull_s1_readdata),             //                                       .readdata
+		.pio_fifo_rdreq_s1_address                    (mm_interconnect_0_pio_fifo_rdreq_s1_address),               //                      pio_fifo_rdreq_s1.address
+		.pio_fifo_rdreq_s1_write                      (mm_interconnect_0_pio_fifo_rdreq_s1_write),                 //                                       .write
+		.pio_fifo_rdreq_s1_readdata                   (mm_interconnect_0_pio_fifo_rdreq_s1_readdata),              //                                       .readdata
+		.pio_fifo_rdreq_s1_writedata                  (mm_interconnect_0_pio_fifo_rdreq_s1_writedata),             //                                       .writedata
+		.pio_fifo_rdreq_s1_chipselect                 (mm_interconnect_0_pio_fifo_rdreq_s1_chipselect)             //                                       .chipselect
 	);
 
 	nios2_subsystem_irq_mapper irq_mapper (

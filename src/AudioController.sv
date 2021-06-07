@@ -2,33 +2,69 @@ module AudioController
 (
     input   logic   AUD_ADC_CLK,    // 1 = left channel, 0 = right channel
                     AUD_BCLK,
-                    AUD_ADC_DATA
+                    AUD_ADC_DATA,
+
+                    wrfull_sig,
+
+    output logic wrreq_sig,
+
+    output logic [31:0] data_sig
 );
 
-    parameter [4:0] dataLength = 5'd16; // 16-bits audio
+    parameter [4:0] dataLength = 5'd16;     // Bit depth is 16 bits.
 
-    reg [5:0] bit_counter;
-    
-    reg [31:0] tmp_data;
-
-    always_ff @ (AUD_ADC_CLK)
-    begin
-        bit_counter = 5'd0;
-    end
+    reg [4:0] left_counter, right_counter;  // Counters for each audio channel.
+    reg [31:0] audio_data;                  // 16 MSBs hold left channel data, 16 LSBs hold right channel data.
 
     always_ff @ (posedge AUD_BCLK)
     begin
-        if (bit_counter >= 0 && bit_counter < dataLength)
+        // Depending on the left/right channel, increment counter for current channel
+        // and reset the counter for the other channel.
+        if (AUD_ADC_CLK)
         begin
-            bit_counter = bit_counter + 1;
+            right_counter = 5'd0;
 
-            if (AUD_ADC_CLK == 1'b1)
-                // left audio data
-                tmp_data[dataLength + (dataLength - bit_counter)] <= AUD_ADC_DATA;
-            else
-                // right audio data
-                tmp_data[dataLength - bit_counter] <= AUD_ADC_DATA;
+            left_counter = left_counter + 1'b1;
+
+            // Only retrieve data when counter is in range.
+            if (left_counter >= 0 && left_counter < dataLength)
+            begin
+                audio_data[getIndex(left_counter, AUD_ADC_CLK)] <= AUD_ADC_DATA;
+            end
+        end
+        else
+        begin
+            left_counter = 5'd0;
+
+            right_counter = right_counter + 1'b1;
+
+            if (right_counter >= 0 && right_counter < dataLength)
+            begin
+                audio_data[getIndex(right_counter, AUD_ADC_CLK)] <= AUD_ADC_DATA;
+            end
+
+            // incorrect logic, but compiles - since writes to left/right_counter occur only in this always @ block.
+            // TODO: fixme
+            if (right_counter == dataLength && wrfull_sig == 1'b0)
+            begin
+                wrreq_sig <= 1'b1;
+                data_sig <= audio_data;
+            end
         end
     end
+
+    // Given an index and left/right indicator, returns the array index to write data to where 0 >= index <= 31.
+    function [4:0] getIndex
+    (
+        input logic [4:0] bit_cnt,  // bit_cnt should be 1 <= bit_cnt <= 16.
+        input logic isLeft          // Indicates left or right channel.
+    );
+    begin
+        if (isLeft)
+            return dataLength + (dataLength - bit_cnt);
+        else
+            return dataLength - bit_cnt;
+    end
+    endfunction
 
 endmodule
