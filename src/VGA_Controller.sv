@@ -1,12 +1,12 @@
 module VGA_Controller
 (
     input   logic   CLK,
+                    VGA_CLK,
 
     output  logic   ADV_BLANK_N,
                     ADV_SYNC_N,
                     VGA_HS,
                     VGA_VS,
-                    VGA_CLK,
             
     output logic [7:0] VGA_R,
     output logic [7:0] VGA_G,
@@ -22,11 +22,6 @@ module VGA_Controller
     logic [9:0] h_counter, h_counter_in;
     logic [9:0] v_counter, v_counter_in;
 
-    vga_pll	vga_pll_inst (
-        .inclk0 ( CLK ),
-        .c0 ( VGA_CLK )
-	);
-    
     always_ff @ (posedge VGA_CLK)
     begin
         VGA_HS <= VGA_HS_in;

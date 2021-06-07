@@ -122,10 +122,19 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to I2C_SCLK
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to I2C_SDAT
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLOCK_50
 set_location_assignment PIN_Y2 -to CLOCK_50
+set_global_assignment -name SYSTEMVERILOG_FILE src/AudioController.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/audio_config.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/AudioVisualizer.sv
 set_global_assignment -name QIP_FILE nios2_subsystem/synthesis/nios2_subsystem.qip
 set_global_assignment -name SYSTEMVERILOG_FILE src/VGA_Controller.sv
-set_global_assignment -name QIP_FILE src/megafunctions/vga_pll/vga_pll.qip
 set_global_assignment -name SDC_FILE AudioVisualizer.sdc
+set_global_assignment -name QIP_FILE src/megafunctions/pll/pll.qip
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to AUD_XCK
+set_location_assignment PIN_E1 -to AUD_XCK
+set_location_assignment PIN_C2 -to AUD_ADC_LRCK
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to AUD_ADC_LRCK
+set_location_assignment PIN_D2 -to AUD_ADC_DAT
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to AUD_ADC_DAT
+set_location_assignment PIN_F2 -to AUD_BCLK
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to AUD_BCLK
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
