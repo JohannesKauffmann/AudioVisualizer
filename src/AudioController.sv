@@ -1,20 +1,20 @@
 module AudioController
 (
     input   logic   AUD_ADC_CLK,    // 1 = left channel, 0 = right channel
-                    AUD_BCLK,
-                    AUD_ADC_DATA,
+                    AUD_BCLK,       // Audio bitclock
+                    AUD_ADC_DATA,   // Audio data line
 
-                    wrfull_sig,
+                    wrfull_sig,     // FIFO full indicator
 
-    output logic wrreq_sig,
+    output logic    wrreq_sig,      // FIFO write request input
 
-    output logic [31:0] data_sig
+    output logic [31:0] data_sig    // FIFO data input
 );
+    parameter [4:0] dataLength = 5'd16; // Bit depth is 16 bits.
 
-    parameter [4:0] dataLength = 5'd16;     // Bit depth is 16 bits.
-
-    reg [4:0] left_counter, right_counter;  // Counters for each audio channel.
-    reg [31:0] audio_data;                  // 16 MSBs hold left channel data, 16 LSBs hold right channel data.
+    reg [4:0] left_counter = 5'd0;      // Counters for each audio channel.
+    reg [4:0] right_counter = 5'd0;
+    logic [31:0] audio_data;              // 16 MSBs hold left channel data, 16 LSBs hold right channel data.
 
     always_ff @ (posedge AUD_BCLK)
     begin
@@ -24,11 +24,11 @@ module AudioController
         begin
             right_counter = 5'd0;
 
-            left_counter = left_counter + 1'b1;
-
             // Only retrieve data when counter is in range.
             if (left_counter >= 0 && left_counter < dataLength)
             begin
+                left_counter = left_counter + 1'b1;
+
                 audio_data[getIndex(left_counter, AUD_ADC_CLK)] <= AUD_ADC_DATA;
             end
         end
@@ -36,19 +36,26 @@ module AudioController
         begin
             left_counter = 5'd0;
 
-            right_counter = right_counter + 1'b1;
-
             if (right_counter >= 0 && right_counter < dataLength)
             begin
+                right_counter = right_counter + 1'b1;
+
                 audio_data[getIndex(right_counter, AUD_ADC_CLK)] <= AUD_ADC_DATA;
             end
 
-            // incorrect logic, but compiles - since writes to left/right_counter occur only in this always @ block.
-            // TODO: fixme
+            // Write data to FIFO after last bit has been received
             if (right_counter == dataLength && wrfull_sig == 1'b0)
             begin
                 wrreq_sig <= 1'b1;
                 data_sig <= audio_data;
+                right_counter = right_counter + 1'b1;
+            end
+
+            // Indicate writing is done
+            if (right_counter == dataLength)
+            begin
+                wrreq_sig <= 1'b0;
+                right_counter = right_counter + 1'b1;
             end
         end
     end

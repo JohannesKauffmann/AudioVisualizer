@@ -26,6 +26,8 @@ module AudioVisualizer
     output logic [7:0] VGA_B
 );
 
+    wire [31:0] data_sig, q_sig;    // Wires used to connect the FIFO input and output
+
     // majority3 function
     assign f = (x1 && x2) || (x2 && x3) || (x1 && x3);
 
@@ -48,7 +50,7 @@ module AudioVisualizer
         .VGA_G      (VGA_G),
         .VGA_B      (VGA_B)
     );
-    
+
     fifo fifo_inst(
         .data   ( data_sig ),
         .wrclk  ( AUD_BCLK ),
