@@ -1,14 +1,15 @@
 #include "altera_avalon_pio_regs.h"
 #include "system.h"
+
 #include <stdio.h>
 #include <unistd.h>
-#include <iostream>
+
 #include <complex>
+
 #define MAX 200
+#define M_PI 3.1415926535897932384
 
 using namespace std;
-
-#define M_PI 3.1415926535897932384
 
 int log2(int N)    /*function to calculate the log2(.) of int numbers*/
 {
