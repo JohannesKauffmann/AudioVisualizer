@@ -79,7 +79,7 @@ https://fpgasoftware.intel.com/eula.
 		(text "export" (rect 245 227 526 464)(font "Arial" (color 0 0 0)))
 		(text "reset" (rect 211 243 452 499)(font "Arial" (color 128 0 0)(font_size 9)))
 		(text "reset_n" (rect 245 267 532 544)(font "Arial" (color 0 0 0)))
-		(text " system " (rect 509 288 1066 586)(font "Arial" ))
+		(text " nios2_subsystem " (rect 466 288 1034 586)(font "Arial" ))
 		(line (pt 240 32)(pt 304 32)(line_width 1))
 		(line (pt 304 32)(pt 304 288)(line_width 1))
 		(line (pt 240 288)(pt 304 288)(line_width 1))
