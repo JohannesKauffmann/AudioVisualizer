@@ -15,7 +15,7 @@ module nios2_subsystem (
 	wire  [31:0] nios2_gen2_data_master_readdata;                           // mm_interconnect_0:nios2_gen2_data_master_readdata -> nios2_gen2:d_readdata
 	wire         nios2_gen2_data_master_waitrequest;                        // mm_interconnect_0:nios2_gen2_data_master_waitrequest -> nios2_gen2:d_waitrequest
 	wire         nios2_gen2_data_master_debugaccess;                        // nios2_gen2:debug_mem_slave_debugaccess_to_roms -> mm_interconnect_0:nios2_gen2_data_master_debugaccess
-	wire  [19:0] nios2_gen2_data_master_address;                            // nios2_gen2:d_address -> mm_interconnect_0:nios2_gen2_data_master_address
+	wire  [21:0] nios2_gen2_data_master_address;                            // nios2_gen2:d_address -> mm_interconnect_0:nios2_gen2_data_master_address
 	wire   [3:0] nios2_gen2_data_master_byteenable;                         // nios2_gen2:d_byteenable -> mm_interconnect_0:nios2_gen2_data_master_byteenable
 	wire         nios2_gen2_data_master_read;                               // nios2_gen2:d_read -> mm_interconnect_0:nios2_gen2_data_master_read
 	wire         nios2_gen2_data_master_readdatavalid;                      // mm_interconnect_0:nios2_gen2_data_master_readdatavalid -> nios2_gen2:d_readdatavalid
@@ -23,7 +23,7 @@ module nios2_subsystem (
 	wire  [31:0] nios2_gen2_data_master_writedata;                          // nios2_gen2:d_writedata -> mm_interconnect_0:nios2_gen2_data_master_writedata
 	wire  [31:0] nios2_gen2_instruction_master_readdata;                    // mm_interconnect_0:nios2_gen2_instruction_master_readdata -> nios2_gen2:i_readdata
 	wire         nios2_gen2_instruction_master_waitrequest;                 // mm_interconnect_0:nios2_gen2_instruction_master_waitrequest -> nios2_gen2:i_waitrequest
-	wire  [19:0] nios2_gen2_instruction_master_address;                     // nios2_gen2:i_address -> mm_interconnect_0:nios2_gen2_instruction_master_address
+	wire  [21:0] nios2_gen2_instruction_master_address;                     // nios2_gen2:i_address -> mm_interconnect_0:nios2_gen2_instruction_master_address
 	wire         nios2_gen2_instruction_master_read;                        // nios2_gen2:i_read -> mm_interconnect_0:nios2_gen2_instruction_master_read
 	wire         nios2_gen2_instruction_master_readdatavalid;               // mm_interconnect_0:nios2_gen2_instruction_master_readdatavalid -> nios2_gen2:i_readdatavalid
 	wire         mm_interconnect_0_jtag_uart_avalon_jtag_slave_chipselect;  // mm_interconnect_0:jtag_uart_avalon_jtag_slave_chipselect -> jtag_uart:av_chipselect
@@ -43,7 +43,7 @@ module nios2_subsystem (
 	wire  [31:0] mm_interconnect_0_nios2_gen2_debug_mem_slave_writedata;    // mm_interconnect_0:nios2_gen2_debug_mem_slave_writedata -> nios2_gen2:debug_mem_slave_writedata
 	wire         mm_interconnect_0_onchip_memory2_s1_chipselect;            // mm_interconnect_0:onchip_memory2_s1_chipselect -> onchip_memory2:chipselect
 	wire  [31:0] mm_interconnect_0_onchip_memory2_s1_readdata;              // onchip_memory2:readdata -> mm_interconnect_0:onchip_memory2_s1_readdata
-	wire  [15:0] mm_interconnect_0_onchip_memory2_s1_address;               // mm_interconnect_0:onchip_memory2_s1_address -> onchip_memory2:address
+	wire  [17:0] mm_interconnect_0_onchip_memory2_s1_address;               // mm_interconnect_0:onchip_memory2_s1_address -> onchip_memory2:address
 	wire   [3:0] mm_interconnect_0_onchip_memory2_s1_byteenable;            // mm_interconnect_0:onchip_memory2_s1_byteenable -> onchip_memory2:byteenable
 	wire         mm_interconnect_0_onchip_memory2_s1_write;                 // mm_interconnect_0:onchip_memory2_s1_write -> onchip_memory2:write
 	wire  [31:0] mm_interconnect_0_onchip_memory2_s1_writedata;             // mm_interconnect_0:onchip_memory2_s1_writedata -> onchip_memory2:writedata

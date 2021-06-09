@@ -89,8 +89,8 @@ ACDS_VERSION := 20.1
 ELF := SampleProject.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS := main.c
-CXX_SRCS :=
+C_SRCS :=
+CXX_SRCS := main.cpp
 ASM_SRCS :=
 
 
