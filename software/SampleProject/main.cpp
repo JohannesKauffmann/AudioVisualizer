@@ -82,9 +82,9 @@ int main()
 {
 	printf("Hello!!\n");
 
-	alt_u8 readRequest;
-	alt_u8 empty;
-	alt_u32 aud_data;
+	alt_u8 readRequest = 0;
+	alt_u8 empty = 0;
+	alt_u32 aud_data = 0;
 
 	while (1)
 	{
@@ -104,7 +104,7 @@ int main()
 			aud_data = IORD_ALTERA_AVALON_PIO_DATA(PIO_FIFO_Q_BASE);
 			printf("data: %ld\n", aud_data);
 
-			readRequest = 1;
+			readRequest = 0;
 			IOWR_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDREQ_BASE, readRequest);
 		}
 	}
