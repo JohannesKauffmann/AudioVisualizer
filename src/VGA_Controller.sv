@@ -22,6 +22,10 @@ module VGA_Controller
     logic [9:0] h_counter, h_counter_in;
     logic [9:0] v_counter, v_counter_in;
 
+    logic [9:0] x_pos, y_pos;   // Holds the current zero-based horizontal and vertical position
+
+    logic [23:0] color;
+
     always_ff @ (posedge VGA_CLK)
     begin
         VGA_HS <= VGA_HS_in;
@@ -29,12 +33,17 @@ module VGA_Controller
         ADV_BLANK_N <= ADV_BLANK_N_in;
         h_counter <= h_counter_in;
         v_counter <= v_counter_in;
-        
-        VGA_R <= 8'hFF;
-        VGA_G <= 8'h00;
-        VGA_B <= 8'h00;
+
+        VGA_R <= color[23:16];
+        VGA_G <= color[15:8];
+        VGA_B <= color[7:0];
     end
     
+    always_comb
+    begin
+        color <= decideColor();
+    end
+
     always_comb
     begin
         // horizontal and vertical counter
@@ -66,6 +75,52 @@ module VGA_Controller
         ADV_BLANK_N_in = 1'b0;
         if(h_counter_in < 10'd640 && v_counter_in < 10'd480)
             ADV_BLANK_N_in = 1'b1;
+
+        if (h_counter_in >= 10'd0 && h_counter_in < 10'd640)
+            x_pos <= h_counter_in;
+        else
+            x_pos <= 0;
+
+        if (v_counter_in >= 10'd0 && v_counter_in < 10'd480)
+            y_pos <= v_counter_in;
+        else
+            y_pos <= 0;
     end
+
+    function [23:0] decideColor();
+    begin
+        // Decides, based on the current position and desired canvas,
+        // which color the current pixel should get.
+        logic inRange;
+        inRange = isInRange(10'd2, 10'd31, 10'd471, 10'd479);
+        inRange = inRange | isInRange(10'd34, 10'd63, 10'd471, 10'd479);
+        inRange = inRange | isInRange(10'd2, 10'd31, 10'd461, 10'd469);
+        inRange = inRange | isInRange(10'd34, 10'd63, 10'd461, 10'd469);
+
+//        for()
+//        begin
+//            //
+//        end
+
+        if (inRange)
+            // TODO: check here for xy cords and color
+            return 24'h23F6F0;
+        else
+            return 24'h000000;
+    end
+    endfunction
+
+    function logic isInRange
+    (
+        // values should be > 0 (so >= 1) with x-values <= 640 and y-values <= 480
+        input logic [9:0] start_x, end_x, start_y, end_y
+    );
+    begin
+        if ( (x_pos + 1 >= start_x && x_pos + 1 <= end_x) && (y_pos + 1 >= start_y && y_pos + 1 <= end_y) )
+            return 1'b1;
+
+        return 1'b0;
+    end
+    endfunction
 
 endmodule
