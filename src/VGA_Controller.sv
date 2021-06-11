@@ -26,6 +26,9 @@ module VGA_Controller
 
     logic [23:0] color;
 
+    logic [5:0] frame_counter = 6'd0;   //0 to 59 seconds. every frame (16ms) + 1
+    logic [5:0] rect_counter = 6'd0;    //0 to 48 rectangles. every second + 1
+
     always_ff @ (posedge VGA_CLK)
     begin
         VGA_HS <= VGA_HS_in;
@@ -37,6 +40,18 @@ module VGA_Controller
         VGA_R <= color[23:16];
         VGA_G <= color[15:8];
         VGA_B <= color[7:0];
+
+        if (h_counter_in == 10'd639 && v_counter_in == 10'd479)
+            frame_counter <= frame_counter + 6'd1;
+
+        if (frame_counter == 6'd29)
+        begin
+            frame_counter <= 6'd0;
+            rect_counter <= rect_counter + 6'd1;
+        end
+
+        if (rect_counter == 6'd49)
+            rect_counter <= 6'd0;
     end
     
     always_comb
@@ -91,20 +106,39 @@ module VGA_Controller
     begin
         // Decides, based on the current position and desired canvas,
         // which color the current pixel should get.
-        logic inRange;
-        inRange = isInRange(10'd2, 10'd31, 10'd471, 10'd479);
-        inRange = inRange | isInRange(10'd34, 10'd63, 10'd471, 10'd479);
-        inRange = inRange | isInRange(10'd2, 10'd31, 10'd461, 10'd469);
-        inRange = inRange | isInRange(10'd34, 10'd63, 10'd461, 10'd469);
+        logic inRange = 0;
+//        logic [5:0] i;
+        logic [9:0] calculated_start_x, calculated_end_x, calculated_start_y, calculated_end_y;
 
-//        for()
-//        begin
-//            //
-//        end
+        calculated_start_x = 10'd2;
+        calculated_end_x = 10'd31;
+
+//        inRange = isInRange(10'd2, 10'd31, 10'd471, 10'd479);
+//        inRange = inRange | isInRange(10'd34, 10'd63, 10'd471, 10'd479);
+//        inRange = inRange | isInRange(10'd2, 10'd31, 10'd461, 10'd469);
+//        inRange = inRange | isInRange(10'd34, 10'd63, 10'd461, 10'd469);
+
+        for (int j = 0; j < 1; j = j + 1) begin
+        for (int i = 0; i <= rect_counter; i = i + 1)
+        begin
+            if (i > 0)
+            begin
+                calculated_start_y = 481 - i * 10;
+                calculated_end_y = 479 - ((i - 1) * 10);
+
+                inRange = inRange | isInRange(calculated_start_x, calculated_end_x, calculated_start_y, calculated_end_y);
+            end
+        end
+        end
 
         if (inRange)
-            // TODO: check here for xy cords and color
-            return 24'h23F6F0;
+            // TODO: implement some more colors
+            begin
+                if (y_pos >= 0 && y_pos < 99)
+                    return 24'hFF0000;
+                 else
+                    return 24'h23F6F0;
+            end
         else
             return 24'h000000;
     end
