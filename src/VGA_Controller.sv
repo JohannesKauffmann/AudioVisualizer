@@ -26,8 +26,8 @@ module VGA_Controller
 
     logic [23:0] color;
 
-    logic [5:0] frame_counter = 6'd0;   //0 to 59 seconds. every frame (16ms) + 1
-    logic [5:0] rect_counter = 6'd0;    //0 to 48 rectangles. every second + 1
+    logic [19:0] freq_test_data = 20'b11110110111011011011;
+    logic [5:0] rect_counter = 6'd48;    //0 to 48 rectangles. every second + 1
 
     always_ff @ (posedge VGA_CLK)
     begin
@@ -40,18 +40,6 @@ module VGA_Controller
         VGA_R <= color[23:16];
         VGA_G <= color[15:8];
         VGA_B <= color[7:0];
-
-        if (h_counter_in == 10'd639 && v_counter_in == 10'd479)
-            frame_counter <= frame_counter + 6'd1;
-
-        if (frame_counter == 6'd29)
-        begin
-            frame_counter <= 6'd0;
-            rect_counter <= rect_counter + 6'd1;
-        end
-
-        if (rect_counter == 6'd49)
-            rect_counter <= 6'd0;
     end
     
     always_comb
@@ -107,28 +95,28 @@ module VGA_Controller
         // Decides, based on the current position and desired canvas,
         // which color the current pixel should get.
         logic inRange = 0;
-//        logic [5:0] i;
-        logic [9:0] calculated_start_x, calculated_end_x, calculated_start_y, calculated_end_y;
+        logic [9:0] calculated_start_x  = 10'd0;
+        logic [9:0] calculated_end_x    = 10'd0;
+        logic [9:0] calculated_start_y  = 10'd0;
+        logic [9:0] calculated_end_y    = 10'd0;
 
-        calculated_start_x = 10'd2;
-        calculated_end_x = 10'd31;
-
-//        inRange = isInRange(10'd2, 10'd31, 10'd471, 10'd479);
-//        inRange = inRange | isInRange(10'd34, 10'd63, 10'd471, 10'd479);
-//        inRange = inRange | isInRange(10'd2, 10'd31, 10'd461, 10'd469);
-//        inRange = inRange | isInRange(10'd34, 10'd63, 10'd461, 10'd469);
-
-        for (int j = 0; j < 1; j = j + 1) begin
-        for (int i = 0; i <= rect_counter; i = i + 1)
+        for (int j = 0; j < 20; j = j + 1)
         begin
-            if (i > 0)
+            if (freq_test_data[j] == 1'b1)
             begin
-                calculated_start_y = 481 - i * 10;
-                calculated_end_y = 479 - ((i - 1) * 10);
+                for (int i = 0; i <= rect_counter; i = i + 1)
+                begin
+                    if (i > 0)
+                    begin
+                        calculated_start_x = 642 - ((j + 1) * 32);
+                        calculated_end_x = 639 - (j * 32);
+                        calculated_start_y = 482 - i * 10;
+                        calculated_end_y = 479 - ((i - 1) * 10);
 
-                inRange = inRange | isInRange(calculated_start_x, calculated_end_x, calculated_start_y, calculated_end_y);
+                        inRange = inRange | isInRange(calculated_start_x, calculated_end_x, calculated_start_y, calculated_end_y);
+                    end
+                end
             end
-        end
         end
 
         if (inRange)
