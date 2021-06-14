@@ -1,5 +1,5 @@
-Info: Starting: Create HDL design files for synthesis
-Info: qsys-generate C:\Users\User\Documents\GitHub\AudioVisualizer\nios2_subsystem.qsys --synthesis=VERILOG --output-directory=C:\Users\User\Documents\GitHub\AudioVisualizer\nios2_subsystem\synthesis --family="Cyclone IV E" --part=EP4CE115F29C7
+Info: Starting: Create block symbol file (.bsf)
+Info: qsys-generate C:\Users\Johannes\source\repos\AudioVisualizer\nios2_subsystem.qsys --block-symbol-file --output-directory=C:\Users\Johannes\source\repos\AudioVisualizer\nios2_subsystem --family="Cyclone IV E" --part=EP4CE115F29C7
 Progress: Loading AudioVisualizer/nios2_subsystem.qsys
 Progress: Reading input file
 Progress: Adding clk_50 [clock_source 20.1]
@@ -10,6 +10,41 @@ Progress: Adding nios2_gen2 [altera_nios2_gen2 20.1]
 Progress: Parameterizing module nios2_gen2
 Progress: Adding onchip_memory2 [altera_avalon_onchip_memory2 20.1]
 Progress: Parameterizing module onchip_memory2
+Progress: Adding pio_data_back [altera_avalon_pio 20.1]
+Progress: Parameterizing module pio_data_back
+Progress: Adding pio_fifo_q [altera_avalon_pio 20.1]
+Progress: Parameterizing module pio_fifo_q
+Progress: Adding pio_fifo_rdempty [altera_avalon_pio 20.1]
+Progress: Parameterizing module pio_fifo_rdempty
+Progress: Adding pio_fifo_rdfull [altera_avalon_pio 20.1]
+Progress: Parameterizing module pio_fifo_rdfull
+Progress: Adding pio_fifo_rdreq [altera_avalon_pio 20.1]
+Progress: Parameterizing module pio_fifo_rdreq
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: nios2_subsystem.jtag_uart: JTAG UART IP input clock need to be at least double (2x) the operating frequency of JTAG TCK on board
+Info: nios2_subsystem.pio_fifo_q: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
+Info: nios2_subsystem.pio_fifo_rdempty: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
+Info: nios2_subsystem.pio_fifo_rdfull: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
+Info: qsys-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate C:\Users\Johannes\source\repos\AudioVisualizer\nios2_subsystem.qsys --synthesis=VERILOG --output-directory=C:\Users\Johannes\source\repos\AudioVisualizer\nios2_subsystem\synthesis --family="Cyclone IV E" --part=EP4CE115F29C7
+Progress: Loading AudioVisualizer/nios2_subsystem.qsys
+Progress: Reading input file
+Progress: Adding clk_50 [clock_source 20.1]
+Progress: Parameterizing module clk_50
+Progress: Adding jtag_uart [altera_avalon_jtag_uart 20.1]
+Progress: Parameterizing module jtag_uart
+Progress: Adding nios2_gen2 [altera_nios2_gen2 20.1]
+Progress: Parameterizing module nios2_gen2
+Progress: Adding onchip_memory2 [altera_avalon_onchip_memory2 20.1]
+Progress: Parameterizing module onchip_memory2
+Progress: Adding pio_data_back [altera_avalon_pio 20.1]
+Progress: Parameterizing module pio_data_back
 Progress: Adding pio_fifo_q [altera_avalon_pio 20.1]
 Progress: Parameterizing module pio_fifo_q
 Progress: Adding pio_fifo_rdempty [altera_avalon_pio 20.1]
@@ -28,24 +63,28 @@ Info: nios2_subsystem.pio_fifo_rdempty: PIO inputs are not hardwired in test ben
 Info: nios2_subsystem.pio_fifo_rdfull: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
 Info: nios2_subsystem: Generating nios2_subsystem "nios2_subsystem" for QUARTUS_SYNTH
 Info: jtag_uart: Starting RTL generation for module 'nios2_subsystem_jtag_uart'
-Info: jtag_uart:   Generation command is [exec D:/digitaletechniek2/quartus/bin64/perl/bin/perl.exe -I D:/digitaletechniek2/quartus/bin64/perl/lib -I D:/digitaletechniek2/quartus/sopc_builder/bin/europa -I D:/digitaletechniek2/quartus/sopc_builder/bin -I D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/common -I D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/altera_avalon_jtag_uart -- D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/altera_avalon_jtag_uart/generate_rtl.pl --name=nios2_subsystem_jtag_uart --dir=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0002_jtag_uart_gen/ --quartus_dir=D:/digitaletechniek2/quartus --verilog --config=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0002_jtag_uart_gen//nios2_subsystem_jtag_uart_component_configuration.pl  --do_build_sim=0  ]
+Info: jtag_uart:   Generation command is [exec C:/intelfpga_lite/20.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga_lite/20.1/quartus/bin64/perl/lib -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_jtag_uart -- C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_jtag_uart/generate_rtl.pl --name=nios2_subsystem_jtag_uart --dir=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0002_jtag_uart_gen/ --quartus_dir=C:/intelfpga_lite/20.1/quartus --verilog --config=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0002_jtag_uart_gen//nios2_subsystem_jtag_uart_component_configuration.pl  --do_build_sim=0  ]
 Info: jtag_uart: Done RTL generation for module 'nios2_subsystem_jtag_uart'
 Info: jtag_uart: "nios2_subsystem" instantiated altera_avalon_jtag_uart "jtag_uart"
 Info: nios2_gen2: "nios2_subsystem" instantiated altera_nios2_gen2 "nios2_gen2"
 Info: onchip_memory2: Starting RTL generation for module 'nios2_subsystem_onchip_memory2'
-Info: onchip_memory2:   Generation command is [exec D:/digitaletechniek2/quartus/bin64/perl/bin/perl.exe -I D:/digitaletechniek2/quartus/bin64/perl/lib -I D:/digitaletechniek2/quartus/sopc_builder/bin/europa -I D:/digitaletechniek2/quartus/sopc_builder/bin -I D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/common -I D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/altera_avalon_onchip_memory2 -- D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/altera_avalon_onchip_memory2/generate_rtl.pl --name=nios2_subsystem_onchip_memory2 --dir=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0003_onchip_memory2_gen/ --quartus_dir=D:/digitaletechniek2/quartus --verilog --config=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0003_onchip_memory2_gen//nios2_subsystem_onchip_memory2_component_configuration.pl  --do_build_sim=0  ]
+Info: onchip_memory2:   Generation command is [exec C:/intelfpga_lite/20.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga_lite/20.1/quartus/bin64/perl/lib -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_onchip_memory2 -- C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_onchip_memory2/generate_rtl.pl --name=nios2_subsystem_onchip_memory2 --dir=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0003_onchip_memory2_gen/ --quartus_dir=C:/intelfpga_lite/20.1/quartus --verilog --config=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0003_onchip_memory2_gen//nios2_subsystem_onchip_memory2_component_configuration.pl  --do_build_sim=0  ]
 Info: onchip_memory2: Done RTL generation for module 'nios2_subsystem_onchip_memory2'
 Info: onchip_memory2: "nios2_subsystem" instantiated altera_avalon_onchip_memory2 "onchip_memory2"
+Info: pio_data_back: Starting RTL generation for module 'nios2_subsystem_pio_data_back'
+Info: pio_data_back:   Generation command is [exec C:/intelfpga_lite/20.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga_lite/20.1/quartus/bin64/perl/lib -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=nios2_subsystem_pio_data_back --dir=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0004_pio_data_back_gen/ --quartus_dir=C:/intelfpga_lite/20.1/quartus --verilog --config=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0004_pio_data_back_gen//nios2_subsystem_pio_data_back_component_configuration.pl  --do_build_sim=0  ]
+Info: pio_data_back: Done RTL generation for module 'nios2_subsystem_pio_data_back'
+Info: pio_data_back: "nios2_subsystem" instantiated altera_avalon_pio "pio_data_back"
 Info: pio_fifo_q: Starting RTL generation for module 'nios2_subsystem_pio_fifo_q'
-Info: pio_fifo_q:   Generation command is [exec D:/digitaletechniek2/quartus/bin64/perl/bin/perl.exe -I D:/digitaletechniek2/quartus/bin64/perl/lib -I D:/digitaletechniek2/quartus/sopc_builder/bin/europa -I D:/digitaletechniek2/quartus/sopc_builder/bin -I D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/common -I D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=nios2_subsystem_pio_fifo_q --dir=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0004_pio_fifo_q_gen/ --quartus_dir=D:/digitaletechniek2/quartus --verilog --config=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0004_pio_fifo_q_gen//nios2_subsystem_pio_fifo_q_component_configuration.pl  --do_build_sim=0  ]
+Info: pio_fifo_q:   Generation command is [exec C:/intelfpga_lite/20.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga_lite/20.1/quartus/bin64/perl/lib -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=nios2_subsystem_pio_fifo_q --dir=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0005_pio_fifo_q_gen/ --quartus_dir=C:/intelfpga_lite/20.1/quartus --verilog --config=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0005_pio_fifo_q_gen//nios2_subsystem_pio_fifo_q_component_configuration.pl  --do_build_sim=0  ]
 Info: pio_fifo_q: Done RTL generation for module 'nios2_subsystem_pio_fifo_q'
 Info: pio_fifo_q: "nios2_subsystem" instantiated altera_avalon_pio "pio_fifo_q"
 Info: pio_fifo_rdempty: Starting RTL generation for module 'nios2_subsystem_pio_fifo_rdempty'
-Info: pio_fifo_rdempty:   Generation command is [exec D:/digitaletechniek2/quartus/bin64/perl/bin/perl.exe -I D:/digitaletechniek2/quartus/bin64/perl/lib -I D:/digitaletechniek2/quartus/sopc_builder/bin/europa -I D:/digitaletechniek2/quartus/sopc_builder/bin -I D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/common -I D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=nios2_subsystem_pio_fifo_rdempty --dir=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0005_pio_fifo_rdempty_gen/ --quartus_dir=D:/digitaletechniek2/quartus --verilog --config=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0005_pio_fifo_rdempty_gen//nios2_subsystem_pio_fifo_rdempty_component_configuration.pl  --do_build_sim=0  ]
+Info: pio_fifo_rdempty:   Generation command is [exec C:/intelfpga_lite/20.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga_lite/20.1/quartus/bin64/perl/lib -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=nios2_subsystem_pio_fifo_rdempty --dir=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0006_pio_fifo_rdempty_gen/ --quartus_dir=C:/intelfpga_lite/20.1/quartus --verilog --config=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0006_pio_fifo_rdempty_gen//nios2_subsystem_pio_fifo_rdempty_component_configuration.pl  --do_build_sim=0  ]
 Info: pio_fifo_rdempty: Done RTL generation for module 'nios2_subsystem_pio_fifo_rdempty'
 Info: pio_fifo_rdempty: "nios2_subsystem" instantiated altera_avalon_pio "pio_fifo_rdempty"
 Info: pio_fifo_rdreq: Starting RTL generation for module 'nios2_subsystem_pio_fifo_rdreq'
-Info: pio_fifo_rdreq:   Generation command is [exec D:/digitaletechniek2/quartus/bin64/perl/bin/perl.exe -I D:/digitaletechniek2/quartus/bin64/perl/lib -I D:/digitaletechniek2/quartus/sopc_builder/bin/europa -I D:/digitaletechniek2/quartus/sopc_builder/bin -I D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/common -I D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/digitaletechniek2/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=nios2_subsystem_pio_fifo_rdreq --dir=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0006_pio_fifo_rdreq_gen/ --quartus_dir=D:/digitaletechniek2/quartus --verilog --config=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0006_pio_fifo_rdreq_gen//nios2_subsystem_pio_fifo_rdreq_component_configuration.pl  --do_build_sim=0  ]
+Info: pio_fifo_rdreq:   Generation command is [exec C:/intelfpga_lite/20.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga_lite/20.1/quartus/bin64/perl/lib -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=nios2_subsystem_pio_fifo_rdreq --dir=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0007_pio_fifo_rdreq_gen/ --quartus_dir=C:/intelfpga_lite/20.1/quartus --verilog --config=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0007_pio_fifo_rdreq_gen//nios2_subsystem_pio_fifo_rdreq_component_configuration.pl  --do_build_sim=0  ]
 Info: pio_fifo_rdreq: Done RTL generation for module 'nios2_subsystem_pio_fifo_rdreq'
 Info: pio_fifo_rdreq: "nios2_subsystem" instantiated altera_avalon_pio "pio_fifo_rdreq"
 Info: avalon_st_adapter: Inserting error_adapter: error_adapter_0
@@ -55,25 +94,26 @@ Info: avalon_st_adapter_003: Inserting error_adapter: error_adapter_0
 Info: avalon_st_adapter_004: Inserting error_adapter: error_adapter_0
 Info: avalon_st_adapter_005: Inserting error_adapter: error_adapter_0
 Info: avalon_st_adapter_006: Inserting error_adapter: error_adapter_0
+Info: avalon_st_adapter_007: Inserting error_adapter: error_adapter_0
 Info: mm_interconnect_0: "nios2_subsystem" instantiated altera_mm_interconnect "mm_interconnect_0"
 Info: irq_mapper: "nios2_subsystem" instantiated altera_irq_mapper "irq_mapper"
 Info: rst_controller: "nios2_subsystem" instantiated altera_reset_controller "rst_controller"
 Info: cpu: Starting RTL generation for module 'nios2_subsystem_nios2_gen2_cpu'
-Info: cpu:   Generation command is [exec D:/DigitaleTechniek2/quartus/bin64//perl/bin/perl.exe -I D:/DigitaleTechniek2/quartus/bin64//perl/lib -I D:/digitaletechniek2/quartus/sopc_builder/bin/europa -I D:/digitaletechniek2/quartus/sopc_builder/bin -I D:/digitaletechniek2/quartus/../ip/altera/nios2_ip/altera_nios2_gen2/cpu_lib -I D:/digitaletechniek2/quartus/../ip/altera/nios2_ip/altera_nios2_gen2/nios_lib -I D:/digitaletechniek2/quartus/../ip/altera/nios2_ip/altera_nios2_gen2 -I D:/digitaletechniek2/quartus/../ip/altera/nios2_ip/altera_nios2_gen2 -- D:/digitaletechniek2/quartus/../ip/altera/nios2_ip/altera_nios2_gen2/generate_rtl.pl --name=nios2_subsystem_nios2_gen2_cpu --dir=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0009_cpu_gen/ --quartus_bindir=D:/DigitaleTechniek2/quartus/bin64/ --verilog --config=C:/Users/User/AppData/Local/Temp/alt8787_8479800896589830838.dir/0009_cpu_gen//nios2_subsystem_nios2_gen2_cpu_processor_configuration.pl  --do_build_sim=0  ]
-Info: cpu: # 2021.06.09 11:40:14 (*) Starting Nios II generation
-Info: cpu: # 2021.06.09 11:40:14 (*)   Elaborating CPU configuration settings
-Info: cpu: # 2021.06.09 11:40:14 (*)   Creating all objects for CPU
-Info: cpu: # 2021.06.09 11:40:14 (*)     Testbench
-Info: cpu: # 2021.06.09 11:40:14 (*)     Instruction decoding
-Info: cpu: # 2021.06.09 11:40:14 (*)       Instruction fields
-Info: cpu: # 2021.06.09 11:40:14 (*)       Instruction decodes
-Info: cpu: # 2021.06.09 11:40:14 (*)       Signals for RTL simulation waveforms
-Info: cpu: # 2021.06.09 11:40:14 (*)       Instruction controls
-Info: cpu: # 2021.06.09 11:40:14 (*)     Pipeline frontend
-Info: cpu: # 2021.06.09 11:40:14 (*)     Pipeline backend
-Info: cpu: # 2021.06.09 11:40:16 (*)   Generating RTL from CPU objects
-Info: cpu: # 2021.06.09 11:40:16 (*)   Creating plain-text RTL
-Info: cpu: # 2021.06.09 11:40:17 (*) Done Nios II generation
+Info: cpu:   Generation command is [exec C:/intelFPGA_lite/20.1/quartus/bin64//perl/bin/perl.exe -I C:/intelFPGA_lite/20.1/quartus/bin64//perl/lib -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I C:/intelfpga_lite/20.1/quartus/../ip/altera/nios2_ip/altera_nios2_gen2/cpu_lib -I C:/intelfpga_lite/20.1/quartus/../ip/altera/nios2_ip/altera_nios2_gen2/nios_lib -I C:/intelfpga_lite/20.1/quartus/../ip/altera/nios2_ip/altera_nios2_gen2 -I C:/intelfpga_lite/20.1/quartus/../ip/altera/nios2_ip/altera_nios2_gen2 -- C:/intelfpga_lite/20.1/quartus/../ip/altera/nios2_ip/altera_nios2_gen2/generate_rtl.pl --name=nios2_subsystem_nios2_gen2_cpu --dir=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0010_cpu_gen/ --quartus_bindir=C:/intelFPGA_lite/20.1/quartus/bin64/ --verilog --config=C:/Users/Johannes/AppData/Local/Temp/alt8792_3365182957979934556.dir/0010_cpu_gen//nios2_subsystem_nios2_gen2_cpu_processor_configuration.pl  --do_build_sim=0  ]
+Info: cpu: # 2021.06.14 12:59:51 (*) Starting Nios II generation
+Info: cpu: # 2021.06.14 12:59:51 (*)   Elaborating CPU configuration settings
+Info: cpu: # 2021.06.14 12:59:51 (*)   Creating all objects for CPU
+Info: cpu: # 2021.06.14 12:59:51 (*)     Testbench
+Info: cpu: # 2021.06.14 12:59:51 (*)     Instruction decoding
+Info: cpu: # 2021.06.14 12:59:51 (*)       Instruction fields
+Info: cpu: # 2021.06.14 12:59:51 (*)       Instruction decodes
+Info: cpu: # 2021.06.14 12:59:51 (*)       Signals for RTL simulation waveforms
+Info: cpu: # 2021.06.14 12:59:51 (*)       Instruction controls
+Info: cpu: # 2021.06.14 12:59:51 (*)     Pipeline frontend
+Info: cpu: # 2021.06.14 12:59:51 (*)     Pipeline backend
+Info: cpu: # 2021.06.14 12:59:52 (*)   Generating RTL from CPU objects
+Info: cpu: # 2021.06.14 12:59:52 (*)   Creating plain-text RTL
+Info: cpu: # 2021.06.14 12:59:53 (*) Done Nios II generation
 Info: cpu: Done RTL generation for module 'nios2_subsystem_nios2_gen2_cpu'
 Info: cpu: "nios2_gen2" instantiated altera_nios2_gen2_unit "cpu"
 Info: nios2_gen2_data_master_translator: "mm_interconnect_0" instantiated altera_merlin_master_translator "nios2_gen2_data_master_translator"
@@ -84,14 +124,14 @@ Info: jtag_uart_avalon_jtag_slave_agent_rsp_fifo: "mm_interconnect_0" instantiat
 Info: router: "mm_interconnect_0" instantiated altera_merlin_router "router"
 Info: router_002: "mm_interconnect_0" instantiated altera_merlin_router "router_002"
 Info: nios2_gen2_data_master_limiter: "mm_interconnect_0" instantiated altera_merlin_traffic_limiter "nios2_gen2_data_master_limiter"
-Info: Reusing file C:/Users/User/Documents/GitHub/AudioVisualizer/nios2_subsystem/synthesis/submodules/altera_avalon_sc_fifo.v
+Info: Reusing file C:/Users/Johannes/source/repos/AudioVisualizer/nios2_subsystem/synthesis/submodules/altera_avalon_sc_fifo.v
 Info: cmd_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux"
 Info: cmd_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux"
 Info: rsp_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "rsp_demux"
 Info: rsp_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux"
-Info: Reusing file C:/Users/User/Documents/GitHub/AudioVisualizer/nios2_subsystem/synthesis/submodules/altera_merlin_arbitrator.sv
+Info: Reusing file C:/Users/Johannes/source/repos/AudioVisualizer/nios2_subsystem/synthesis/submodules/altera_merlin_arbitrator.sv
 Info: avalon_st_adapter: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter"
 Info: error_adapter_0: "avalon_st_adapter" instantiated error_adapter "error_adapter_0"
-Info: nios2_subsystem: Done "nios2_subsystem" with 25 modules, 46 files
+Info: nios2_subsystem: Done "nios2_subsystem" with 26 modules, 47 files
 Info: qsys-generate succeeded.
 Info: Finished: Create HDL design files for synthesis

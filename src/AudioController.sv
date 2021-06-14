@@ -14,7 +14,12 @@ module AudioController
 
     reg [4:0] left_counter = 5'd0;      // Counters for each audio channel.
     reg [4:0] right_counter = 5'd0;
-    logic [31:0] audio_data;              // 16 MSBs hold left channel data, 16 LSBs hold right channel data.
+    logic [31:0] audio_data = 10'b0;              // 16 MSBs hold left channel data, 16 LSBs hold right channel data.
+
+//    always_ff @ (posedge AUD_ADC_CLK)
+//    begin
+//        audio_data <= audio_data + 10'b1;
+//    end
 
     always_ff @ (posedge AUD_BCLK)
     begin
@@ -50,12 +55,10 @@ module AudioController
                 data_sig <= audio_data;
                 right_counter = right_counter + 1'b1;
             end
-
-            // Indicate writing is done
-            if (right_counter == dataLength)
+            else
             begin
+                // Indicate writing is done
                 wrreq_sig <= 1'b0;
-                right_counter = right_counter + 1'b1;
             end
         end
     end

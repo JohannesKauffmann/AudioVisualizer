@@ -23,10 +23,18 @@ module AudioVisualizer
 
     output logic [7:0] VGA_R,
     output logic [7:0] VGA_G,
-    output logic [7:0] VGA_B
+    output logic [7:0] VGA_B,
+    
+    output logic clk_out,
+    output logic clk_out2,
+    output logic gnd
 );
 
-    wire [31:0] data_sig, q_sig;    // Wires used to connect the FIFO input and output
+    assign clk_out = data_back[1];
+    assign clk_out2 = AUD_ADC_LRCK;
+    assign gnd = 1'b0;
+
+    wire [31:0] data_sig, q_sig, data_back;    // Wires used to connect the FIFO input and output
 
     // majority3 function
     assign f = (x1 && x2) || (x2 && x3) || (x1 && x3);
@@ -74,6 +82,7 @@ module AudioVisualizer
         .pio_fifo_rdempty_external_connection_export    (rdempty_sig),
         .pio_fifo_rdfull_external_connection_export     (rdfull_sig),
         .pio_fifo_rdreq_external_connection_export      (rdreq_sig),
+        .pio_data_back_external_connection_export       (data_back),
         .reset_reset_n                                  (nios2_reset_n)
     );
 
@@ -83,7 +92,7 @@ module AudioVisualizer
         .i2c_data   ( I2C_SDAT ),
         .i2c_clk    ( I2C_SCLK )
     );
-    
+
     AudioController aud_ctrl_inst (
         .AUD_ADC_CLK    (AUD_ADC_LRCK),
         .AUD_BCLK       (AUD_BCLK),
