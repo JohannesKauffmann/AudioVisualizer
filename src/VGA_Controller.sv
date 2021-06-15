@@ -17,6 +17,31 @@ module VGA_Controller
     
     parameter [9:0] H_TOTAL = 10'd800;
     parameter [9:0] V_TOTAL = 10'd525;
+	 
+	 bit [19:0] [5:0] sound_height;
+	 
+	 assign sound_height[0] = 6'd48;
+	 assign sound_height[1] = 6'd24;
+	 assign sound_height[2] = 6'd23;
+	 assign sound_height[3] = 6'd20;
+	 assign sound_height[4] = 6'd17;
+	 assign sound_height[5] = 6'd0;
+	 assign sound_height[6] = 6'd40;
+	 assign sound_height[7] = 6'd3;
+	 assign sound_height[8] = 6'd12;
+	 assign sound_height[9] = 6'd13;
+	 assign sound_height[10] = 6'd48;
+	 assign sound_height[11] = 6'd24;
+	 assign sound_height[12] = 6'd23;
+	 assign sound_height[13] = 6'd20;
+	 assign sound_height[14] = 6'd17;
+	 assign sound_height[15] = 6'd28;
+	 assign sound_height[16] = 6'd40;
+	 assign sound_height[17] = 6'd3;
+	 assign sound_height[18] = 6'd12;
+	 assign sound_height[19] = 6'd13;
+	 
+	 logic [23:0]counter = 23'd0;
     
     logic VGA_HS_in, VGA_VS_in, ADV_BLANK_N_in;
     logic [9:0] h_counter, h_counter_in;
@@ -26,7 +51,6 @@ module VGA_Controller
 
     logic [23:0] color;
 
-    logic [19:0] freq_test_data = 20'b11110110111011011011;
     logic [5:0] rect_counter = 6'd48;    //0 to 48 rectangles. every second + 1
 
     always_ff @ (posedge VGA_CLK)
@@ -77,8 +101,8 @@ module VGA_Controller
         // Display pixels (inhibit blanking) between horizontal 0-639 and vertical 0-479 (640x480)
         ADV_BLANK_N_in = 1'b0;
         if(h_counter_in < 10'd640 && v_counter_in < 10'd480)
-            ADV_BLANK_N_in = 1'b1;
-
+				ADV_BLANK_N_in = 1'b1;
+				
         if (h_counter_in >= 10'd0 && h_counter_in < 10'd640)
             x_pos <= h_counter_in;
         else
@@ -102,9 +126,8 @@ module VGA_Controller
 
         for (int j = 0; j < 20; j = j + 1)
         begin
-            if (freq_test_data[j] == 1'b1)
             begin
-                for (int i = 0; i <= rect_counter; i = i + 1)
+                for (int i = 0; i <= sound_height[19-j]; i = i + 1)
                 begin
                     if (i > 0)
                     begin
@@ -122,13 +145,20 @@ module VGA_Controller
         if (inRange)
             // TODO: implement some more colors
             begin
-                if (y_pos >= 0 && y_pos < 99)
-                    return 24'hFF0000;
-                 else
-                    return 24'h23F6F0;
-            end
+						if (y_pos >= 0 && y_pos < 99)
+							return 24'hFF0000;						//red
+						else
+							begin
+								if(y_pos >= 100 && y_pos < 129)
+									return 24'hFF7500;				//orange
+								else
+									return 24'h00FF00;
+									//return 24'h23F6F0;				//blue
+							end
+				end
         else
-            return 24'h000000;
+				return (256 * (y_pos) / 479) + (256 * (x_pos) / 639 * 256) + (256 * y_pos / 479 * 256 * 256);
+//            return 24'h000000;									//background
     end
     endfunction
 
