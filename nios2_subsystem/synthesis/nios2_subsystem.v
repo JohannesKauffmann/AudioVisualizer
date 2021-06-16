@@ -13,63 +13,163 @@ module nios2_subsystem (
 		input  wire        reset_reset_n                                //                                reset.reset_n
 	);
 
-	wire  [31:0] nios2_gen2_data_master_readdata;                           // mm_interconnect_0:nios2_gen2_data_master_readdata -> nios2_gen2:d_readdata
-	wire         nios2_gen2_data_master_waitrequest;                        // mm_interconnect_0:nios2_gen2_data_master_waitrequest -> nios2_gen2:d_waitrequest
-	wire         nios2_gen2_data_master_debugaccess;                        // nios2_gen2:debug_mem_slave_debugaccess_to_roms -> mm_interconnect_0:nios2_gen2_data_master_debugaccess
-	wire  [19:0] nios2_gen2_data_master_address;                            // nios2_gen2:d_address -> mm_interconnect_0:nios2_gen2_data_master_address
-	wire   [3:0] nios2_gen2_data_master_byteenable;                         // nios2_gen2:d_byteenable -> mm_interconnect_0:nios2_gen2_data_master_byteenable
-	wire         nios2_gen2_data_master_read;                               // nios2_gen2:d_read -> mm_interconnect_0:nios2_gen2_data_master_read
-	wire         nios2_gen2_data_master_readdatavalid;                      // mm_interconnect_0:nios2_gen2_data_master_readdatavalid -> nios2_gen2:d_readdatavalid
-	wire         nios2_gen2_data_master_write;                              // nios2_gen2:d_write -> mm_interconnect_0:nios2_gen2_data_master_write
-	wire  [31:0] nios2_gen2_data_master_writedata;                          // nios2_gen2:d_writedata -> mm_interconnect_0:nios2_gen2_data_master_writedata
-	wire  [31:0] nios2_gen2_instruction_master_readdata;                    // mm_interconnect_0:nios2_gen2_instruction_master_readdata -> nios2_gen2:i_readdata
-	wire         nios2_gen2_instruction_master_waitrequest;                 // mm_interconnect_0:nios2_gen2_instruction_master_waitrequest -> nios2_gen2:i_waitrequest
-	wire  [19:0] nios2_gen2_instruction_master_address;                     // nios2_gen2:i_address -> mm_interconnect_0:nios2_gen2_instruction_master_address
-	wire         nios2_gen2_instruction_master_read;                        // nios2_gen2:i_read -> mm_interconnect_0:nios2_gen2_instruction_master_read
-	wire         nios2_gen2_instruction_master_readdatavalid;               // mm_interconnect_0:nios2_gen2_instruction_master_readdatavalid -> nios2_gen2:i_readdatavalid
-	wire         mm_interconnect_0_jtag_uart_avalon_jtag_slave_chipselect;  // mm_interconnect_0:jtag_uart_avalon_jtag_slave_chipselect -> jtag_uart:av_chipselect
-	wire  [31:0] mm_interconnect_0_jtag_uart_avalon_jtag_slave_readdata;    // jtag_uart:av_readdata -> mm_interconnect_0:jtag_uart_avalon_jtag_slave_readdata
-	wire         mm_interconnect_0_jtag_uart_avalon_jtag_slave_waitrequest; // jtag_uart:av_waitrequest -> mm_interconnect_0:jtag_uart_avalon_jtag_slave_waitrequest
-	wire   [0:0] mm_interconnect_0_jtag_uart_avalon_jtag_slave_address;     // mm_interconnect_0:jtag_uart_avalon_jtag_slave_address -> jtag_uart:av_address
-	wire         mm_interconnect_0_jtag_uart_avalon_jtag_slave_read;        // mm_interconnect_0:jtag_uart_avalon_jtag_slave_read -> jtag_uart:av_read_n
-	wire         mm_interconnect_0_jtag_uart_avalon_jtag_slave_write;       // mm_interconnect_0:jtag_uart_avalon_jtag_slave_write -> jtag_uart:av_write_n
-	wire  [31:0] mm_interconnect_0_jtag_uart_avalon_jtag_slave_writedata;   // mm_interconnect_0:jtag_uart_avalon_jtag_slave_writedata -> jtag_uart:av_writedata
-	wire  [31:0] mm_interconnect_0_nios2_gen2_debug_mem_slave_readdata;     // nios2_gen2:debug_mem_slave_readdata -> mm_interconnect_0:nios2_gen2_debug_mem_slave_readdata
-	wire         mm_interconnect_0_nios2_gen2_debug_mem_slave_waitrequest;  // nios2_gen2:debug_mem_slave_waitrequest -> mm_interconnect_0:nios2_gen2_debug_mem_slave_waitrequest
-	wire         mm_interconnect_0_nios2_gen2_debug_mem_slave_debugaccess;  // mm_interconnect_0:nios2_gen2_debug_mem_slave_debugaccess -> nios2_gen2:debug_mem_slave_debugaccess
-	wire   [8:0] mm_interconnect_0_nios2_gen2_debug_mem_slave_address;      // mm_interconnect_0:nios2_gen2_debug_mem_slave_address -> nios2_gen2:debug_mem_slave_address
-	wire         mm_interconnect_0_nios2_gen2_debug_mem_slave_read;         // mm_interconnect_0:nios2_gen2_debug_mem_slave_read -> nios2_gen2:debug_mem_slave_read
-	wire   [3:0] mm_interconnect_0_nios2_gen2_debug_mem_slave_byteenable;   // mm_interconnect_0:nios2_gen2_debug_mem_slave_byteenable -> nios2_gen2:debug_mem_slave_byteenable
-	wire         mm_interconnect_0_nios2_gen2_debug_mem_slave_write;        // mm_interconnect_0:nios2_gen2_debug_mem_slave_write -> nios2_gen2:debug_mem_slave_write
-	wire  [31:0] mm_interconnect_0_nios2_gen2_debug_mem_slave_writedata;    // mm_interconnect_0:nios2_gen2_debug_mem_slave_writedata -> nios2_gen2:debug_mem_slave_writedata
-	wire         mm_interconnect_0_onchip_memory2_s1_chipselect;            // mm_interconnect_0:onchip_memory2_s1_chipselect -> onchip_memory2:chipselect
-	wire  [31:0] mm_interconnect_0_onchip_memory2_s1_readdata;              // onchip_memory2:readdata -> mm_interconnect_0:onchip_memory2_s1_readdata
-	wire  [15:0] mm_interconnect_0_onchip_memory2_s1_address;               // mm_interconnect_0:onchip_memory2_s1_address -> onchip_memory2:address
-	wire   [3:0] mm_interconnect_0_onchip_memory2_s1_byteenable;            // mm_interconnect_0:onchip_memory2_s1_byteenable -> onchip_memory2:byteenable
-	wire         mm_interconnect_0_onchip_memory2_s1_write;                 // mm_interconnect_0:onchip_memory2_s1_write -> onchip_memory2:write
-	wire  [31:0] mm_interconnect_0_onchip_memory2_s1_writedata;             // mm_interconnect_0:onchip_memory2_s1_writedata -> onchip_memory2:writedata
-	wire         mm_interconnect_0_onchip_memory2_s1_clken;                 // mm_interconnect_0:onchip_memory2_s1_clken -> onchip_memory2:clken
-	wire  [31:0] mm_interconnect_0_pio_fifo_q_s1_readdata;                  // pio_fifo_q:readdata -> mm_interconnect_0:pio_fifo_q_s1_readdata
-	wire   [1:0] mm_interconnect_0_pio_fifo_q_s1_address;                   // mm_interconnect_0:pio_fifo_q_s1_address -> pio_fifo_q:address
-	wire         mm_interconnect_0_pio_fifo_rdreq_s1_chipselect;            // mm_interconnect_0:pio_fifo_rdreq_s1_chipselect -> pio_fifo_rdreq:chipselect
-	wire  [31:0] mm_interconnect_0_pio_fifo_rdreq_s1_readdata;              // pio_fifo_rdreq:readdata -> mm_interconnect_0:pio_fifo_rdreq_s1_readdata
-	wire   [1:0] mm_interconnect_0_pio_fifo_rdreq_s1_address;               // mm_interconnect_0:pio_fifo_rdreq_s1_address -> pio_fifo_rdreq:address
-	wire         mm_interconnect_0_pio_fifo_rdreq_s1_write;                 // mm_interconnect_0:pio_fifo_rdreq_s1_write -> pio_fifo_rdreq:write_n
-	wire  [31:0] mm_interconnect_0_pio_fifo_rdreq_s1_writedata;             // mm_interconnect_0:pio_fifo_rdreq_s1_writedata -> pio_fifo_rdreq:writedata
-	wire  [31:0] mm_interconnect_0_pio_fifo_rdfull_s1_readdata;             // pio_fifo_rdfull:readdata -> mm_interconnect_0:pio_fifo_rdfull_s1_readdata
-	wire   [1:0] mm_interconnect_0_pio_fifo_rdfull_s1_address;              // mm_interconnect_0:pio_fifo_rdfull_s1_address -> pio_fifo_rdfull:address
-	wire  [31:0] mm_interconnect_0_pio_fifo_rdempty_s1_readdata;            // pio_fifo_rdempty:readdata -> mm_interconnect_0:pio_fifo_rdempty_s1_readdata
-	wire   [1:0] mm_interconnect_0_pio_fifo_rdempty_s1_address;             // mm_interconnect_0:pio_fifo_rdempty_s1_address -> pio_fifo_rdempty:address
-	wire         mm_interconnect_0_pio_data_back_s1_chipselect;             // mm_interconnect_0:pio_data_back_s1_chipselect -> pio_data_back:chipselect
-	wire  [31:0] mm_interconnect_0_pio_data_back_s1_readdata;               // pio_data_back:readdata -> mm_interconnect_0:pio_data_back_s1_readdata
-	wire   [1:0] mm_interconnect_0_pio_data_back_s1_address;                // mm_interconnect_0:pio_data_back_s1_address -> pio_data_back:address
-	wire         mm_interconnect_0_pio_data_back_s1_write;                  // mm_interconnect_0:pio_data_back_s1_write -> pio_data_back:write_n
-	wire  [31:0] mm_interconnect_0_pio_data_back_s1_writedata;              // mm_interconnect_0:pio_data_back_s1_writedata -> pio_data_back:writedata
-	wire         irq_mapper_receiver0_irq;                                  // jtag_uart:av_irq -> irq_mapper:receiver0_irq
-	wire  [31:0] nios2_gen2_irq_irq;                                        // irq_mapper:sender_irq -> nios2_gen2:irq
-	wire         rst_controller_reset_out_reset;                            // rst_controller:reset_out -> [irq_mapper:reset, jtag_uart:rst_n, mm_interconnect_0:nios2_gen2_reset_reset_bridge_in_reset_reset, nios2_gen2:reset_n, onchip_memory2:reset, pio_data_back:reset_n, pio_fifo_q:reset_n, pio_fifo_rdempty:reset_n, pio_fifo_rdfull:reset_n, pio_fifo_rdreq:reset_n, rst_translator:in_reset]
-	wire         rst_controller_reset_out_reset_req;                        // rst_controller:reset_req -> [nios2_gen2:reset_req, onchip_memory2:reset_req, rst_translator:reset_req_in]
-	wire         nios2_gen2_debug_reset_request_reset;                      // nios2_gen2:debug_reset_request -> rst_controller:reset_in1
+	wire         nios2_gen2_custom_instruction_master_readra;                                      // nios2_gen2:E_ci_combo_readra -> nios2_gen2_custom_instruction_master_translator:ci_slave_readra
+	wire         nios2_gen2_custom_instruction_master_readrb;                                      // nios2_gen2:E_ci_combo_readrb -> nios2_gen2_custom_instruction_master_translator:ci_slave_readrb
+	wire   [4:0] nios2_gen2_custom_instruction_master_multi_b;                                     // nios2_gen2:A_ci_multi_b -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_b
+	wire   [4:0] nios2_gen2_custom_instruction_master_multi_c;                                     // nios2_gen2:A_ci_multi_c -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_c
+	wire         nios2_gen2_custom_instruction_master_reset_req;                                   // nios2_gen2:A_ci_multi_reset_req -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_reset_req
+	wire   [4:0] nios2_gen2_custom_instruction_master_multi_a;                                     // nios2_gen2:A_ci_multi_a -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_a
+	wire  [31:0] nios2_gen2_custom_instruction_master_result;                                      // nios2_gen2_custom_instruction_master_translator:ci_slave_result -> nios2_gen2:E_ci_combo_result
+	wire  [31:0] nios2_gen2_custom_instruction_master_datab;                                       // nios2_gen2:E_ci_combo_datab -> nios2_gen2_custom_instruction_master_translator:ci_slave_datab
+	wire  [31:0] nios2_gen2_custom_instruction_master_dataa;                                       // nios2_gen2:E_ci_combo_dataa -> nios2_gen2_custom_instruction_master_translator:ci_slave_dataa
+	wire         nios2_gen2_custom_instruction_master_writerc;                                     // nios2_gen2:E_ci_combo_writerc -> nios2_gen2_custom_instruction_master_translator:ci_slave_writerc
+	wire  [31:0] nios2_gen2_custom_instruction_master_multi_dataa;                                 // nios2_gen2:A_ci_multi_dataa -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_dataa
+	wire         nios2_gen2_custom_instruction_master_multi_writerc;                               // nios2_gen2:A_ci_multi_writerc -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_writerc
+	wire   [4:0] nios2_gen2_custom_instruction_master_a;                                           // nios2_gen2:E_ci_combo_a -> nios2_gen2_custom_instruction_master_translator:ci_slave_a
+	wire   [4:0] nios2_gen2_custom_instruction_master_b;                                           // nios2_gen2:E_ci_combo_b -> nios2_gen2_custom_instruction_master_translator:ci_slave_b
+	wire  [31:0] nios2_gen2_custom_instruction_master_multi_result;                                // nios2_gen2_custom_instruction_master_translator:ci_slave_multi_result -> nios2_gen2:A_ci_multi_result
+	wire         nios2_gen2_custom_instruction_master_clk;                                         // nios2_gen2:A_ci_multi_clock -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_clk
+	wire  [31:0] nios2_gen2_custom_instruction_master_multi_datab;                                 // nios2_gen2:A_ci_multi_datab -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_datab
+	wire   [4:0] nios2_gen2_custom_instruction_master_c;                                           // nios2_gen2:E_ci_combo_c -> nios2_gen2_custom_instruction_master_translator:ci_slave_c
+	wire  [31:0] nios2_gen2_custom_instruction_master_ipending;                                    // nios2_gen2:E_ci_combo_ipending -> nios2_gen2_custom_instruction_master_translator:ci_slave_ipending
+	wire         nios2_gen2_custom_instruction_master_start;                                       // nios2_gen2:A_ci_multi_start -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_start
+	wire         nios2_gen2_custom_instruction_master_done;                                        // nios2_gen2_custom_instruction_master_translator:ci_slave_multi_done -> nios2_gen2:A_ci_multi_done
+	wire   [7:0] nios2_gen2_custom_instruction_master_n;                                           // nios2_gen2:E_ci_combo_n -> nios2_gen2_custom_instruction_master_translator:ci_slave_n
+	wire         nios2_gen2_custom_instruction_master_estatus;                                     // nios2_gen2:E_ci_combo_estatus -> nios2_gen2_custom_instruction_master_translator:ci_slave_estatus
+	wire         nios2_gen2_custom_instruction_master_clk_en;                                      // nios2_gen2:A_ci_multi_clk_en -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_clken
+	wire         nios2_gen2_custom_instruction_master_reset;                                       // nios2_gen2:A_ci_multi_reset -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_reset
+	wire         nios2_gen2_custom_instruction_master_multi_readrb;                                // nios2_gen2:A_ci_multi_readrb -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_readrb
+	wire         nios2_gen2_custom_instruction_master_multi_readra;                                // nios2_gen2:A_ci_multi_readra -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_readra
+	wire   [7:0] nios2_gen2_custom_instruction_master_multi_n;                                     // nios2_gen2:A_ci_multi_n -> nios2_gen2_custom_instruction_master_translator:ci_slave_multi_n
+	wire  [31:0] nios2_gen2_custom_instruction_master_translator_comb_ci_master_result;            // nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_result -> nios2_gen2_custom_instruction_master_translator:comb_ci_master_result
+	wire         nios2_gen2_custom_instruction_master_translator_comb_ci_master_readra;            // nios2_gen2_custom_instruction_master_translator:comb_ci_master_readra -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_readra
+	wire   [4:0] nios2_gen2_custom_instruction_master_translator_comb_ci_master_a;                 // nios2_gen2_custom_instruction_master_translator:comb_ci_master_a -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_a
+	wire   [4:0] nios2_gen2_custom_instruction_master_translator_comb_ci_master_b;                 // nios2_gen2_custom_instruction_master_translator:comb_ci_master_b -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_b
+	wire         nios2_gen2_custom_instruction_master_translator_comb_ci_master_readrb;            // nios2_gen2_custom_instruction_master_translator:comb_ci_master_readrb -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_readrb
+	wire   [4:0] nios2_gen2_custom_instruction_master_translator_comb_ci_master_c;                 // nios2_gen2_custom_instruction_master_translator:comb_ci_master_c -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_c
+	wire         nios2_gen2_custom_instruction_master_translator_comb_ci_master_estatus;           // nios2_gen2_custom_instruction_master_translator:comb_ci_master_estatus -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_estatus
+	wire  [31:0] nios2_gen2_custom_instruction_master_translator_comb_ci_master_ipending;          // nios2_gen2_custom_instruction_master_translator:comb_ci_master_ipending -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_ipending
+	wire  [31:0] nios2_gen2_custom_instruction_master_translator_comb_ci_master_datab;             // nios2_gen2_custom_instruction_master_translator:comb_ci_master_datab -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_datab
+	wire  [31:0] nios2_gen2_custom_instruction_master_translator_comb_ci_master_dataa;             // nios2_gen2_custom_instruction_master_translator:comb_ci_master_dataa -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_dataa
+	wire         nios2_gen2_custom_instruction_master_translator_comb_ci_master_writerc;           // nios2_gen2_custom_instruction_master_translator:comb_ci_master_writerc -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_writerc
+	wire   [7:0] nios2_gen2_custom_instruction_master_translator_comb_ci_master_n;                 // nios2_gen2_custom_instruction_master_translator:comb_ci_master_n -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_slave_n
+	wire  [31:0] nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_result;             // nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_result -> nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_result
+	wire         nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_readra;             // nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_readra -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_readra
+	wire   [4:0] nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_a;                  // nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_a -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_a
+	wire   [4:0] nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_b;                  // nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_b -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_b
+	wire         nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_readrb;             // nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_readrb -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_readrb
+	wire   [4:0] nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_c;                  // nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_c -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_c
+	wire         nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_estatus;            // nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_estatus -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_estatus
+	wire  [31:0] nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_ipending;           // nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_ipending -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_ipending
+	wire  [31:0] nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_datab;              // nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_datab -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_datab
+	wire  [31:0] nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_dataa;              // nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_dataa -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_dataa
+	wire         nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_writerc;            // nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_writerc -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_writerc
+	wire   [7:0] nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_n;                  // nios2_gen2_custom_instruction_master_comb_xconnect:ci_master0_n -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_slave_n
+	wire  [31:0] nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_result;     // nios_custom_instr_floating_point_2_0:s1_result -> nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_master_result
+	wire  [31:0] nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_datab;      // nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_master_datab -> nios_custom_instr_floating_point_2_0:s1_datab
+	wire  [31:0] nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_dataa;      // nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_master_dataa -> nios_custom_instr_floating_point_2_0:s1_dataa
+	wire   [3:0] nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_n;          // nios2_gen2_custom_instruction_master_comb_slave_translator0:ci_master_n -> nios_custom_instr_floating_point_2_0:s1_n
+	wire         nios2_gen2_custom_instruction_master_translator_multi_ci_master_readra;           // nios2_gen2_custom_instruction_master_translator:multi_ci_master_readra -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_readra
+	wire   [4:0] nios2_gen2_custom_instruction_master_translator_multi_ci_master_a;                // nios2_gen2_custom_instruction_master_translator:multi_ci_master_a -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_a
+	wire   [4:0] nios2_gen2_custom_instruction_master_translator_multi_ci_master_b;                // nios2_gen2_custom_instruction_master_translator:multi_ci_master_b -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_b
+	wire         nios2_gen2_custom_instruction_master_translator_multi_ci_master_clk;              // nios2_gen2_custom_instruction_master_translator:multi_ci_master_clk -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_clk
+	wire         nios2_gen2_custom_instruction_master_translator_multi_ci_master_readrb;           // nios2_gen2_custom_instruction_master_translator:multi_ci_master_readrb -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_readrb
+	wire   [4:0] nios2_gen2_custom_instruction_master_translator_multi_ci_master_c;                // nios2_gen2_custom_instruction_master_translator:multi_ci_master_c -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_c
+	wire         nios2_gen2_custom_instruction_master_translator_multi_ci_master_start;            // nios2_gen2_custom_instruction_master_translator:multi_ci_master_start -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_start
+	wire         nios2_gen2_custom_instruction_master_translator_multi_ci_master_reset_req;        // nios2_gen2_custom_instruction_master_translator:multi_ci_master_reset_req -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_reset_req
+	wire         nios2_gen2_custom_instruction_master_translator_multi_ci_master_done;             // nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_done -> nios2_gen2_custom_instruction_master_translator:multi_ci_master_done
+	wire   [7:0] nios2_gen2_custom_instruction_master_translator_multi_ci_master_n;                // nios2_gen2_custom_instruction_master_translator:multi_ci_master_n -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_n
+	wire  [31:0] nios2_gen2_custom_instruction_master_translator_multi_ci_master_result;           // nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_result -> nios2_gen2_custom_instruction_master_translator:multi_ci_master_result
+	wire         nios2_gen2_custom_instruction_master_translator_multi_ci_master_clk_en;           // nios2_gen2_custom_instruction_master_translator:multi_ci_master_clken -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_clken
+	wire  [31:0] nios2_gen2_custom_instruction_master_translator_multi_ci_master_datab;            // nios2_gen2_custom_instruction_master_translator:multi_ci_master_datab -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_datab
+	wire  [31:0] nios2_gen2_custom_instruction_master_translator_multi_ci_master_dataa;            // nios2_gen2_custom_instruction_master_translator:multi_ci_master_dataa -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_dataa
+	wire         nios2_gen2_custom_instruction_master_translator_multi_ci_master_reset;            // nios2_gen2_custom_instruction_master_translator:multi_ci_master_reset -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_reset
+	wire         nios2_gen2_custom_instruction_master_translator_multi_ci_master_writerc;          // nios2_gen2_custom_instruction_master_translator:multi_ci_master_writerc -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_slave_writerc
+	wire         nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_readra;            // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_readra -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_readra
+	wire   [4:0] nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_a;                 // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_a -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_a
+	wire   [4:0] nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_b;                 // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_b -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_b
+	wire         nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_readrb;            // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_readrb -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_readrb
+	wire   [4:0] nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_c;                 // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_c -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_c
+	wire         nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_clk;               // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_clk -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_clk
+	wire  [31:0] nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_ipending;          // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_ipending -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_ipending
+	wire         nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_start;             // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_start -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_start
+	wire         nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_reset_req;         // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_reset_req -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_reset_req
+	wire         nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_done;              // nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_done -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_done
+	wire   [7:0] nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_n;                 // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_n -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_n
+	wire  [31:0] nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_result;            // nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_result -> nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_result
+	wire         nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_estatus;           // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_estatus -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_estatus
+	wire         nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_clk_en;            // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_clken -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_clken
+	wire  [31:0] nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_datab;             // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_datab -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_datab
+	wire  [31:0] nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_dataa;             // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_dataa -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_dataa
+	wire         nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_reset;             // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_reset -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_reset
+	wire         nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_writerc;           // nios2_gen2_custom_instruction_master_multi_xconnect:ci_master0_writerc -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_slave_writerc
+	wire  [31:0] nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_result;    // nios_custom_instr_floating_point_2_0:s2_result -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_master_result
+	wire         nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_clk;       // nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_master_clk -> nios_custom_instr_floating_point_2_0:s2_clk
+	wire         nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_clk_en;    // nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_master_clken -> nios_custom_instr_floating_point_2_0:s2_clk_en
+	wire  [31:0] nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_datab;     // nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_master_datab -> nios_custom_instr_floating_point_2_0:s2_datab
+	wire  [31:0] nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_dataa;     // nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_master_dataa -> nios_custom_instr_floating_point_2_0:s2_dataa
+	wire         nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_start;     // nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_master_start -> nios_custom_instr_floating_point_2_0:s2_start
+	wire         nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_reset;     // nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_master_reset -> nios_custom_instr_floating_point_2_0:s2_reset
+	wire         nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_reset_req; // nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_master_reset_req -> nios_custom_instr_floating_point_2_0:s2_reset_req
+	wire         nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_done;      // nios_custom_instr_floating_point_2_0:s2_done -> nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_master_done
+	wire   [2:0] nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_n;         // nios2_gen2_custom_instruction_master_multi_slave_translator0:ci_master_n -> nios_custom_instr_floating_point_2_0:s2_n
+	wire  [31:0] nios2_gen2_data_master_readdata;                                                  // mm_interconnect_0:nios2_gen2_data_master_readdata -> nios2_gen2:d_readdata
+	wire         nios2_gen2_data_master_waitrequest;                                               // mm_interconnect_0:nios2_gen2_data_master_waitrequest -> nios2_gen2:d_waitrequest
+	wire         nios2_gen2_data_master_debugaccess;                                               // nios2_gen2:debug_mem_slave_debugaccess_to_roms -> mm_interconnect_0:nios2_gen2_data_master_debugaccess
+	wire  [19:0] nios2_gen2_data_master_address;                                                   // nios2_gen2:d_address -> mm_interconnect_0:nios2_gen2_data_master_address
+	wire   [3:0] nios2_gen2_data_master_byteenable;                                                // nios2_gen2:d_byteenable -> mm_interconnect_0:nios2_gen2_data_master_byteenable
+	wire         nios2_gen2_data_master_read;                                                      // nios2_gen2:d_read -> mm_interconnect_0:nios2_gen2_data_master_read
+	wire         nios2_gen2_data_master_readdatavalid;                                             // mm_interconnect_0:nios2_gen2_data_master_readdatavalid -> nios2_gen2:d_readdatavalid
+	wire         nios2_gen2_data_master_write;                                                     // nios2_gen2:d_write -> mm_interconnect_0:nios2_gen2_data_master_write
+	wire  [31:0] nios2_gen2_data_master_writedata;                                                 // nios2_gen2:d_writedata -> mm_interconnect_0:nios2_gen2_data_master_writedata
+	wire  [31:0] nios2_gen2_instruction_master_readdata;                                           // mm_interconnect_0:nios2_gen2_instruction_master_readdata -> nios2_gen2:i_readdata
+	wire         nios2_gen2_instruction_master_waitrequest;                                        // mm_interconnect_0:nios2_gen2_instruction_master_waitrequest -> nios2_gen2:i_waitrequest
+	wire  [19:0] nios2_gen2_instruction_master_address;                                            // nios2_gen2:i_address -> mm_interconnect_0:nios2_gen2_instruction_master_address
+	wire         nios2_gen2_instruction_master_read;                                               // nios2_gen2:i_read -> mm_interconnect_0:nios2_gen2_instruction_master_read
+	wire         nios2_gen2_instruction_master_readdatavalid;                                      // mm_interconnect_0:nios2_gen2_instruction_master_readdatavalid -> nios2_gen2:i_readdatavalid
+	wire         mm_interconnect_0_jtag_uart_avalon_jtag_slave_chipselect;                         // mm_interconnect_0:jtag_uart_avalon_jtag_slave_chipselect -> jtag_uart:av_chipselect
+	wire  [31:0] mm_interconnect_0_jtag_uart_avalon_jtag_slave_readdata;                           // jtag_uart:av_readdata -> mm_interconnect_0:jtag_uart_avalon_jtag_slave_readdata
+	wire         mm_interconnect_0_jtag_uart_avalon_jtag_slave_waitrequest;                        // jtag_uart:av_waitrequest -> mm_interconnect_0:jtag_uart_avalon_jtag_slave_waitrequest
+	wire   [0:0] mm_interconnect_0_jtag_uart_avalon_jtag_slave_address;                            // mm_interconnect_0:jtag_uart_avalon_jtag_slave_address -> jtag_uart:av_address
+	wire         mm_interconnect_0_jtag_uart_avalon_jtag_slave_read;                               // mm_interconnect_0:jtag_uart_avalon_jtag_slave_read -> jtag_uart:av_read_n
+	wire         mm_interconnect_0_jtag_uart_avalon_jtag_slave_write;                              // mm_interconnect_0:jtag_uart_avalon_jtag_slave_write -> jtag_uart:av_write_n
+	wire  [31:0] mm_interconnect_0_jtag_uart_avalon_jtag_slave_writedata;                          // mm_interconnect_0:jtag_uart_avalon_jtag_slave_writedata -> jtag_uart:av_writedata
+	wire  [31:0] mm_interconnect_0_nios2_gen2_debug_mem_slave_readdata;                            // nios2_gen2:debug_mem_slave_readdata -> mm_interconnect_0:nios2_gen2_debug_mem_slave_readdata
+	wire         mm_interconnect_0_nios2_gen2_debug_mem_slave_waitrequest;                         // nios2_gen2:debug_mem_slave_waitrequest -> mm_interconnect_0:nios2_gen2_debug_mem_slave_waitrequest
+	wire         mm_interconnect_0_nios2_gen2_debug_mem_slave_debugaccess;                         // mm_interconnect_0:nios2_gen2_debug_mem_slave_debugaccess -> nios2_gen2:debug_mem_slave_debugaccess
+	wire   [8:0] mm_interconnect_0_nios2_gen2_debug_mem_slave_address;                             // mm_interconnect_0:nios2_gen2_debug_mem_slave_address -> nios2_gen2:debug_mem_slave_address
+	wire         mm_interconnect_0_nios2_gen2_debug_mem_slave_read;                                // mm_interconnect_0:nios2_gen2_debug_mem_slave_read -> nios2_gen2:debug_mem_slave_read
+	wire   [3:0] mm_interconnect_0_nios2_gen2_debug_mem_slave_byteenable;                          // mm_interconnect_0:nios2_gen2_debug_mem_slave_byteenable -> nios2_gen2:debug_mem_slave_byteenable
+	wire         mm_interconnect_0_nios2_gen2_debug_mem_slave_write;                               // mm_interconnect_0:nios2_gen2_debug_mem_slave_write -> nios2_gen2:debug_mem_slave_write
+	wire  [31:0] mm_interconnect_0_nios2_gen2_debug_mem_slave_writedata;                           // mm_interconnect_0:nios2_gen2_debug_mem_slave_writedata -> nios2_gen2:debug_mem_slave_writedata
+	wire         mm_interconnect_0_onchip_memory2_s1_chipselect;                                   // mm_interconnect_0:onchip_memory2_s1_chipselect -> onchip_memory2:chipselect
+	wire  [31:0] mm_interconnect_0_onchip_memory2_s1_readdata;                                     // onchip_memory2:readdata -> mm_interconnect_0:onchip_memory2_s1_readdata
+	wire  [15:0] mm_interconnect_0_onchip_memory2_s1_address;                                      // mm_interconnect_0:onchip_memory2_s1_address -> onchip_memory2:address
+	wire   [3:0] mm_interconnect_0_onchip_memory2_s1_byteenable;                                   // mm_interconnect_0:onchip_memory2_s1_byteenable -> onchip_memory2:byteenable
+	wire         mm_interconnect_0_onchip_memory2_s1_write;                                        // mm_interconnect_0:onchip_memory2_s1_write -> onchip_memory2:write
+	wire  [31:0] mm_interconnect_0_onchip_memory2_s1_writedata;                                    // mm_interconnect_0:onchip_memory2_s1_writedata -> onchip_memory2:writedata
+	wire         mm_interconnect_0_onchip_memory2_s1_clken;                                        // mm_interconnect_0:onchip_memory2_s1_clken -> onchip_memory2:clken
+	wire  [31:0] mm_interconnect_0_pio_fifo_q_s1_readdata;                                         // pio_fifo_q:readdata -> mm_interconnect_0:pio_fifo_q_s1_readdata
+	wire   [1:0] mm_interconnect_0_pio_fifo_q_s1_address;                                          // mm_interconnect_0:pio_fifo_q_s1_address -> pio_fifo_q:address
+	wire         mm_interconnect_0_pio_fifo_rdreq_s1_chipselect;                                   // mm_interconnect_0:pio_fifo_rdreq_s1_chipselect -> pio_fifo_rdreq:chipselect
+	wire  [31:0] mm_interconnect_0_pio_fifo_rdreq_s1_readdata;                                     // pio_fifo_rdreq:readdata -> mm_interconnect_0:pio_fifo_rdreq_s1_readdata
+	wire   [1:0] mm_interconnect_0_pio_fifo_rdreq_s1_address;                                      // mm_interconnect_0:pio_fifo_rdreq_s1_address -> pio_fifo_rdreq:address
+	wire         mm_interconnect_0_pio_fifo_rdreq_s1_write;                                        // mm_interconnect_0:pio_fifo_rdreq_s1_write -> pio_fifo_rdreq:write_n
+	wire  [31:0] mm_interconnect_0_pio_fifo_rdreq_s1_writedata;                                    // mm_interconnect_0:pio_fifo_rdreq_s1_writedata -> pio_fifo_rdreq:writedata
+	wire  [31:0] mm_interconnect_0_pio_fifo_rdfull_s1_readdata;                                    // pio_fifo_rdfull:readdata -> mm_interconnect_0:pio_fifo_rdfull_s1_readdata
+	wire   [1:0] mm_interconnect_0_pio_fifo_rdfull_s1_address;                                     // mm_interconnect_0:pio_fifo_rdfull_s1_address -> pio_fifo_rdfull:address
+	wire  [31:0] mm_interconnect_0_pio_fifo_rdempty_s1_readdata;                                   // pio_fifo_rdempty:readdata -> mm_interconnect_0:pio_fifo_rdempty_s1_readdata
+	wire   [1:0] mm_interconnect_0_pio_fifo_rdempty_s1_address;                                    // mm_interconnect_0:pio_fifo_rdempty_s1_address -> pio_fifo_rdempty:address
+	wire         mm_interconnect_0_pio_data_back_s1_chipselect;                                    // mm_interconnect_0:pio_data_back_s1_chipselect -> pio_data_back:chipselect
+	wire  [31:0] mm_interconnect_0_pio_data_back_s1_readdata;                                      // pio_data_back:readdata -> mm_interconnect_0:pio_data_back_s1_readdata
+	wire   [1:0] mm_interconnect_0_pio_data_back_s1_address;                                       // mm_interconnect_0:pio_data_back_s1_address -> pio_data_back:address
+	wire         mm_interconnect_0_pio_data_back_s1_write;                                         // mm_interconnect_0:pio_data_back_s1_write -> pio_data_back:write_n
+	wire  [31:0] mm_interconnect_0_pio_data_back_s1_writedata;                                     // mm_interconnect_0:pio_data_back_s1_writedata -> pio_data_back:writedata
+	wire         irq_mapper_receiver0_irq;                                                         // jtag_uart:av_irq -> irq_mapper:receiver0_irq
+	wire  [31:0] nios2_gen2_irq_irq;                                                               // irq_mapper:sender_irq -> nios2_gen2:irq
+	wire         rst_controller_reset_out_reset;                                                   // rst_controller:reset_out -> [irq_mapper:reset, jtag_uart:rst_n, mm_interconnect_0:nios2_gen2_reset_reset_bridge_in_reset_reset, nios2_gen2:reset_n, onchip_memory2:reset, pio_data_back:reset_n, pio_fifo_q:reset_n, pio_fifo_rdempty:reset_n, pio_fifo_rdfull:reset_n, pio_fifo_rdreq:reset_n, rst_translator:in_reset]
+	wire         rst_controller_reset_out_reset_req;                                               // rst_controller:reset_req -> [nios2_gen2:reset_req, onchip_memory2:reset_req, rst_translator:reset_req_in]
+	wire         nios2_gen2_debug_reset_request_reset;                                             // nios2_gen2:debug_reset_request -> rst_controller:reset_in1
 
 	nios2_subsystem_jtag_uart jtag_uart (
 		.clk            (clk_clk),                                                   //               clk.clk
@@ -112,7 +212,56 @@ module nios2_subsystem (
 		.debug_mem_slave_waitrequest         (mm_interconnect_0_nios2_gen2_debug_mem_slave_waitrequest), //                          .waitrequest
 		.debug_mem_slave_write               (mm_interconnect_0_nios2_gen2_debug_mem_slave_write),       //                          .write
 		.debug_mem_slave_writedata           (mm_interconnect_0_nios2_gen2_debug_mem_slave_writedata),   //                          .writedata
-		.dummy_ci_port                       ()                                                          // custom_instruction_master.readra
+		.A_ci_multi_done                     (nios2_gen2_custom_instruction_master_done),                // custom_instruction_master.done
+		.A_ci_multi_result                   (nios2_gen2_custom_instruction_master_multi_result),        //                          .multi_result
+		.A_ci_multi_a                        (nios2_gen2_custom_instruction_master_multi_a),             //                          .multi_a
+		.A_ci_multi_b                        (nios2_gen2_custom_instruction_master_multi_b),             //                          .multi_b
+		.A_ci_multi_c                        (nios2_gen2_custom_instruction_master_multi_c),             //                          .multi_c
+		.A_ci_multi_clk_en                   (nios2_gen2_custom_instruction_master_clk_en),              //                          .clk_en
+		.A_ci_multi_clock                    (nios2_gen2_custom_instruction_master_clk),                 //                          .clk
+		.A_ci_multi_reset                    (nios2_gen2_custom_instruction_master_reset),               //                          .reset
+		.A_ci_multi_reset_req                (nios2_gen2_custom_instruction_master_reset_req),           //                          .reset_req
+		.A_ci_multi_dataa                    (nios2_gen2_custom_instruction_master_multi_dataa),         //                          .multi_dataa
+		.A_ci_multi_datab                    (nios2_gen2_custom_instruction_master_multi_datab),         //                          .multi_datab
+		.A_ci_multi_n                        (nios2_gen2_custom_instruction_master_multi_n),             //                          .multi_n
+		.A_ci_multi_readra                   (nios2_gen2_custom_instruction_master_multi_readra),        //                          .multi_readra
+		.A_ci_multi_readrb                   (nios2_gen2_custom_instruction_master_multi_readrb),        //                          .multi_readrb
+		.A_ci_multi_start                    (nios2_gen2_custom_instruction_master_start),               //                          .start
+		.A_ci_multi_writerc                  (nios2_gen2_custom_instruction_master_multi_writerc),       //                          .multi_writerc
+		.E_ci_combo_result                   (nios2_gen2_custom_instruction_master_result),              //                          .result
+		.E_ci_combo_a                        (nios2_gen2_custom_instruction_master_a),                   //                          .a
+		.E_ci_combo_b                        (nios2_gen2_custom_instruction_master_b),                   //                          .b
+		.E_ci_combo_c                        (nios2_gen2_custom_instruction_master_c),                   //                          .c
+		.E_ci_combo_dataa                    (nios2_gen2_custom_instruction_master_dataa),               //                          .dataa
+		.E_ci_combo_datab                    (nios2_gen2_custom_instruction_master_datab),               //                          .datab
+		.E_ci_combo_estatus                  (nios2_gen2_custom_instruction_master_estatus),             //                          .estatus
+		.E_ci_combo_ipending                 (nios2_gen2_custom_instruction_master_ipending),            //                          .ipending
+		.E_ci_combo_n                        (nios2_gen2_custom_instruction_master_n),                   //                          .n
+		.E_ci_combo_readra                   (nios2_gen2_custom_instruction_master_readra),              //                          .readra
+		.E_ci_combo_readrb                   (nios2_gen2_custom_instruction_master_readrb),              //                          .readrb
+		.E_ci_combo_writerc                  (nios2_gen2_custom_instruction_master_writerc)              //                          .writerc
+	);
+
+	nios2_subsystem_nios_custom_instr_floating_point_2_0 #(
+		.arithmetic_present (1),
+		.root_present       (1),
+		.conversion_present (1),
+		.comparison_present (1)
+	) nios_custom_instr_floating_point_2_0 (
+		.s1_dataa     (nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_dataa),      // s1.dataa
+		.s1_datab     (nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_datab),      //   .datab
+		.s1_n         (nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_n),          //   .n
+		.s1_result    (nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_result),     //   .result
+		.s2_clk       (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_clk),       // s2.clk
+		.s2_clk_en    (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_clk_en),    //   .clk_en
+		.s2_dataa     (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_dataa),     //   .dataa
+		.s2_datab     (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_datab),     //   .datab
+		.s2_n         (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_n),         //   .n
+		.s2_reset     (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_reset),     //   .reset
+		.s2_reset_req (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_reset_req), //   .reset_req
+		.s2_start     (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_start),     //   .start
+		.s2_done      (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_done),      //   .done
+		.s2_result    (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_result)     //   .result
 	);
 
 	nios2_subsystem_onchip_memory2 onchip_memory2 (
@@ -173,6 +322,219 @@ module nios2_subsystem (
 		.chipselect (mm_interconnect_0_pio_fifo_rdreq_s1_chipselect), //                    .chipselect
 		.readdata   (mm_interconnect_0_pio_fifo_rdreq_s1_readdata),   //                    .readdata
 		.out_port   (pio_fifo_rdreq_external_connection_export)       // external_connection.export
+	);
+
+	altera_customins_master_translator #(
+		.SHARED_COMB_AND_MULTI (0)
+	) nios2_gen2_custom_instruction_master_translator (
+		.ci_slave_dataa            (nios2_gen2_custom_instruction_master_dataa),                                //        ci_slave.dataa
+		.ci_slave_datab            (nios2_gen2_custom_instruction_master_datab),                                //                .datab
+		.ci_slave_result           (nios2_gen2_custom_instruction_master_result),                               //                .result
+		.ci_slave_n                (nios2_gen2_custom_instruction_master_n),                                    //                .n
+		.ci_slave_readra           (nios2_gen2_custom_instruction_master_readra),                               //                .readra
+		.ci_slave_readrb           (nios2_gen2_custom_instruction_master_readrb),                               //                .readrb
+		.ci_slave_writerc          (nios2_gen2_custom_instruction_master_writerc),                              //                .writerc
+		.ci_slave_a                (nios2_gen2_custom_instruction_master_a),                                    //                .a
+		.ci_slave_b                (nios2_gen2_custom_instruction_master_b),                                    //                .b
+		.ci_slave_c                (nios2_gen2_custom_instruction_master_c),                                    //                .c
+		.ci_slave_ipending         (nios2_gen2_custom_instruction_master_ipending),                             //                .ipending
+		.ci_slave_estatus          (nios2_gen2_custom_instruction_master_estatus),                              //                .estatus
+		.ci_slave_multi_clk        (nios2_gen2_custom_instruction_master_clk),                                  //                .clk
+		.ci_slave_multi_reset      (nios2_gen2_custom_instruction_master_reset),                                //                .reset
+		.ci_slave_multi_clken      (nios2_gen2_custom_instruction_master_clk_en),                               //                .clk_en
+		.ci_slave_multi_reset_req  (nios2_gen2_custom_instruction_master_reset_req),                            //                .reset_req
+		.ci_slave_multi_start      (nios2_gen2_custom_instruction_master_start),                                //                .start
+		.ci_slave_multi_done       (nios2_gen2_custom_instruction_master_done),                                 //                .done
+		.ci_slave_multi_dataa      (nios2_gen2_custom_instruction_master_multi_dataa),                          //                .multi_dataa
+		.ci_slave_multi_datab      (nios2_gen2_custom_instruction_master_multi_datab),                          //                .multi_datab
+		.ci_slave_multi_result     (nios2_gen2_custom_instruction_master_multi_result),                         //                .multi_result
+		.ci_slave_multi_n          (nios2_gen2_custom_instruction_master_multi_n),                              //                .multi_n
+		.ci_slave_multi_readra     (nios2_gen2_custom_instruction_master_multi_readra),                         //                .multi_readra
+		.ci_slave_multi_readrb     (nios2_gen2_custom_instruction_master_multi_readrb),                         //                .multi_readrb
+		.ci_slave_multi_writerc    (nios2_gen2_custom_instruction_master_multi_writerc),                        //                .multi_writerc
+		.ci_slave_multi_a          (nios2_gen2_custom_instruction_master_multi_a),                              //                .multi_a
+		.ci_slave_multi_b          (nios2_gen2_custom_instruction_master_multi_b),                              //                .multi_b
+		.ci_slave_multi_c          (nios2_gen2_custom_instruction_master_multi_c),                              //                .multi_c
+		.comb_ci_master_dataa      (nios2_gen2_custom_instruction_master_translator_comb_ci_master_dataa),      //  comb_ci_master.dataa
+		.comb_ci_master_datab      (nios2_gen2_custom_instruction_master_translator_comb_ci_master_datab),      //                .datab
+		.comb_ci_master_result     (nios2_gen2_custom_instruction_master_translator_comb_ci_master_result),     //                .result
+		.comb_ci_master_n          (nios2_gen2_custom_instruction_master_translator_comb_ci_master_n),          //                .n
+		.comb_ci_master_readra     (nios2_gen2_custom_instruction_master_translator_comb_ci_master_readra),     //                .readra
+		.comb_ci_master_readrb     (nios2_gen2_custom_instruction_master_translator_comb_ci_master_readrb),     //                .readrb
+		.comb_ci_master_writerc    (nios2_gen2_custom_instruction_master_translator_comb_ci_master_writerc),    //                .writerc
+		.comb_ci_master_a          (nios2_gen2_custom_instruction_master_translator_comb_ci_master_a),          //                .a
+		.comb_ci_master_b          (nios2_gen2_custom_instruction_master_translator_comb_ci_master_b),          //                .b
+		.comb_ci_master_c          (nios2_gen2_custom_instruction_master_translator_comb_ci_master_c),          //                .c
+		.comb_ci_master_ipending   (nios2_gen2_custom_instruction_master_translator_comb_ci_master_ipending),   //                .ipending
+		.comb_ci_master_estatus    (nios2_gen2_custom_instruction_master_translator_comb_ci_master_estatus),    //                .estatus
+		.multi_ci_master_clk       (nios2_gen2_custom_instruction_master_translator_multi_ci_master_clk),       // multi_ci_master.clk
+		.multi_ci_master_reset     (nios2_gen2_custom_instruction_master_translator_multi_ci_master_reset),     //                .reset
+		.multi_ci_master_clken     (nios2_gen2_custom_instruction_master_translator_multi_ci_master_clk_en),    //                .clk_en
+		.multi_ci_master_reset_req (nios2_gen2_custom_instruction_master_translator_multi_ci_master_reset_req), //                .reset_req
+		.multi_ci_master_start     (nios2_gen2_custom_instruction_master_translator_multi_ci_master_start),     //                .start
+		.multi_ci_master_done      (nios2_gen2_custom_instruction_master_translator_multi_ci_master_done),      //                .done
+		.multi_ci_master_dataa     (nios2_gen2_custom_instruction_master_translator_multi_ci_master_dataa),     //                .dataa
+		.multi_ci_master_datab     (nios2_gen2_custom_instruction_master_translator_multi_ci_master_datab),     //                .datab
+		.multi_ci_master_result    (nios2_gen2_custom_instruction_master_translator_multi_ci_master_result),    //                .result
+		.multi_ci_master_n         (nios2_gen2_custom_instruction_master_translator_multi_ci_master_n),         //                .n
+		.multi_ci_master_readra    (nios2_gen2_custom_instruction_master_translator_multi_ci_master_readra),    //                .readra
+		.multi_ci_master_readrb    (nios2_gen2_custom_instruction_master_translator_multi_ci_master_readrb),    //                .readrb
+		.multi_ci_master_writerc   (nios2_gen2_custom_instruction_master_translator_multi_ci_master_writerc),   //                .writerc
+		.multi_ci_master_a         (nios2_gen2_custom_instruction_master_translator_multi_ci_master_a),         //                .a
+		.multi_ci_master_b         (nios2_gen2_custom_instruction_master_translator_multi_ci_master_b),         //                .b
+		.multi_ci_master_c         (nios2_gen2_custom_instruction_master_translator_multi_ci_master_c)          //                .c
+	);
+
+	nios2_subsystem_nios2_gen2_custom_instruction_master_comb_xconnect nios2_gen2_custom_instruction_master_comb_xconnect (
+		.ci_slave_dataa      (nios2_gen2_custom_instruction_master_translator_comb_ci_master_dataa),    //   ci_slave.dataa
+		.ci_slave_datab      (nios2_gen2_custom_instruction_master_translator_comb_ci_master_datab),    //           .datab
+		.ci_slave_result     (nios2_gen2_custom_instruction_master_translator_comb_ci_master_result),   //           .result
+		.ci_slave_n          (nios2_gen2_custom_instruction_master_translator_comb_ci_master_n),        //           .n
+		.ci_slave_readra     (nios2_gen2_custom_instruction_master_translator_comb_ci_master_readra),   //           .readra
+		.ci_slave_readrb     (nios2_gen2_custom_instruction_master_translator_comb_ci_master_readrb),   //           .readrb
+		.ci_slave_writerc    (nios2_gen2_custom_instruction_master_translator_comb_ci_master_writerc),  //           .writerc
+		.ci_slave_a          (nios2_gen2_custom_instruction_master_translator_comb_ci_master_a),        //           .a
+		.ci_slave_b          (nios2_gen2_custom_instruction_master_translator_comb_ci_master_b),        //           .b
+		.ci_slave_c          (nios2_gen2_custom_instruction_master_translator_comb_ci_master_c),        //           .c
+		.ci_slave_ipending   (nios2_gen2_custom_instruction_master_translator_comb_ci_master_ipending), //           .ipending
+		.ci_slave_estatus    (nios2_gen2_custom_instruction_master_translator_comb_ci_master_estatus),  //           .estatus
+		.ci_master0_dataa    (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_dataa),     // ci_master0.dataa
+		.ci_master0_datab    (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_datab),     //           .datab
+		.ci_master0_result   (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_result),    //           .result
+		.ci_master0_n        (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_n),         //           .n
+		.ci_master0_readra   (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_readra),    //           .readra
+		.ci_master0_readrb   (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_readrb),    //           .readrb
+		.ci_master0_writerc  (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_writerc),   //           .writerc
+		.ci_master0_a        (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_a),         //           .a
+		.ci_master0_b        (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_b),         //           .b
+		.ci_master0_c        (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_c),         //           .c
+		.ci_master0_ipending (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_ipending),  //           .ipending
+		.ci_master0_estatus  (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_estatus)    //           .estatus
+	);
+
+	altera_customins_slave_translator #(
+		.N_WIDTH          (4),
+		.USE_DONE         (0),
+		.NUM_FIXED_CYCLES (0)
+	) nios2_gen2_custom_instruction_master_comb_slave_translator0 (
+		.ci_slave_dataa      (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_dataa),          //  ci_slave.dataa
+		.ci_slave_datab      (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_datab),          //          .datab
+		.ci_slave_result     (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_result),         //          .result
+		.ci_slave_n          (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_n),              //          .n
+		.ci_slave_readra     (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_readra),         //          .readra
+		.ci_slave_readrb     (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_readrb),         //          .readrb
+		.ci_slave_writerc    (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_writerc),        //          .writerc
+		.ci_slave_a          (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_a),              //          .a
+		.ci_slave_b          (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_b),              //          .b
+		.ci_slave_c          (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_c),              //          .c
+		.ci_slave_ipending   (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_ipending),       //          .ipending
+		.ci_slave_estatus    (nios2_gen2_custom_instruction_master_comb_xconnect_ci_master0_estatus),        //          .estatus
+		.ci_master_dataa     (nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_dataa),  // ci_master.dataa
+		.ci_master_datab     (nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_datab),  //          .datab
+		.ci_master_result    (nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_result), //          .result
+		.ci_master_n         (nios2_gen2_custom_instruction_master_comb_slave_translator0_ci_master_n),      //          .n
+		.ci_master_readra    (),                                                                             // (terminated)
+		.ci_master_readrb    (),                                                                             // (terminated)
+		.ci_master_writerc   (),                                                                             // (terminated)
+		.ci_master_a         (),                                                                             // (terminated)
+		.ci_master_b         (),                                                                             // (terminated)
+		.ci_master_c         (),                                                                             // (terminated)
+		.ci_master_ipending  (),                                                                             // (terminated)
+		.ci_master_estatus   (),                                                                             // (terminated)
+		.ci_master_clk       (),                                                                             // (terminated)
+		.ci_master_clken     (),                                                                             // (terminated)
+		.ci_master_reset_req (),                                                                             // (terminated)
+		.ci_master_reset     (),                                                                             // (terminated)
+		.ci_master_start     (),                                                                             // (terminated)
+		.ci_master_done      (1'b0),                                                                         // (terminated)
+		.ci_slave_clk        (1'b0),                                                                         // (terminated)
+		.ci_slave_clken      (1'b0),                                                                         // (terminated)
+		.ci_slave_reset_req  (1'b0),                                                                         // (terminated)
+		.ci_slave_reset      (1'b0),                                                                         // (terminated)
+		.ci_slave_start      (1'b0),                                                                         // (terminated)
+		.ci_slave_done       ()                                                                              // (terminated)
+	);
+
+	nios2_subsystem_nios2_gen2_custom_instruction_master_multi_xconnect nios2_gen2_custom_instruction_master_multi_xconnect (
+		.ci_slave_dataa       (nios2_gen2_custom_instruction_master_translator_multi_ci_master_dataa),     //   ci_slave.dataa
+		.ci_slave_datab       (nios2_gen2_custom_instruction_master_translator_multi_ci_master_datab),     //           .datab
+		.ci_slave_result      (nios2_gen2_custom_instruction_master_translator_multi_ci_master_result),    //           .result
+		.ci_slave_n           (nios2_gen2_custom_instruction_master_translator_multi_ci_master_n),         //           .n
+		.ci_slave_readra      (nios2_gen2_custom_instruction_master_translator_multi_ci_master_readra),    //           .readra
+		.ci_slave_readrb      (nios2_gen2_custom_instruction_master_translator_multi_ci_master_readrb),    //           .readrb
+		.ci_slave_writerc     (nios2_gen2_custom_instruction_master_translator_multi_ci_master_writerc),   //           .writerc
+		.ci_slave_a           (nios2_gen2_custom_instruction_master_translator_multi_ci_master_a),         //           .a
+		.ci_slave_b           (nios2_gen2_custom_instruction_master_translator_multi_ci_master_b),         //           .b
+		.ci_slave_c           (nios2_gen2_custom_instruction_master_translator_multi_ci_master_c),         //           .c
+		.ci_slave_ipending    (),                                                                          //           .ipending
+		.ci_slave_estatus     (),                                                                          //           .estatus
+		.ci_slave_clk         (nios2_gen2_custom_instruction_master_translator_multi_ci_master_clk),       //           .clk
+		.ci_slave_reset       (nios2_gen2_custom_instruction_master_translator_multi_ci_master_reset),     //           .reset
+		.ci_slave_clken       (nios2_gen2_custom_instruction_master_translator_multi_ci_master_clk_en),    //           .clk_en
+		.ci_slave_reset_req   (nios2_gen2_custom_instruction_master_translator_multi_ci_master_reset_req), //           .reset_req
+		.ci_slave_start       (nios2_gen2_custom_instruction_master_translator_multi_ci_master_start),     //           .start
+		.ci_slave_done        (nios2_gen2_custom_instruction_master_translator_multi_ci_master_done),      //           .done
+		.ci_master0_dataa     (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_dataa),      // ci_master0.dataa
+		.ci_master0_datab     (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_datab),      //           .datab
+		.ci_master0_result    (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_result),     //           .result
+		.ci_master0_n         (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_n),          //           .n
+		.ci_master0_readra    (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_readra),     //           .readra
+		.ci_master0_readrb    (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_readrb),     //           .readrb
+		.ci_master0_writerc   (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_writerc),    //           .writerc
+		.ci_master0_a         (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_a),          //           .a
+		.ci_master0_b         (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_b),          //           .b
+		.ci_master0_c         (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_c),          //           .c
+		.ci_master0_ipending  (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_ipending),   //           .ipending
+		.ci_master0_estatus   (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_estatus),    //           .estatus
+		.ci_master0_clk       (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_clk),        //           .clk
+		.ci_master0_reset     (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_reset),      //           .reset
+		.ci_master0_clken     (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_clk_en),     //           .clk_en
+		.ci_master0_reset_req (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_reset_req),  //           .reset_req
+		.ci_master0_start     (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_start),      //           .start
+		.ci_master0_done      (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_done)        //           .done
+	);
+
+	altera_customins_slave_translator #(
+		.N_WIDTH          (3),
+		.USE_DONE         (1),
+		.NUM_FIXED_CYCLES (1)
+	) nios2_gen2_custom_instruction_master_multi_slave_translator0 (
+		.ci_slave_dataa      (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_dataa),             //  ci_slave.dataa
+		.ci_slave_datab      (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_datab),             //          .datab
+		.ci_slave_result     (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_result),            //          .result
+		.ci_slave_n          (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_n),                 //          .n
+		.ci_slave_readra     (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_readra),            //          .readra
+		.ci_slave_readrb     (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_readrb),            //          .readrb
+		.ci_slave_writerc    (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_writerc),           //          .writerc
+		.ci_slave_a          (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_a),                 //          .a
+		.ci_slave_b          (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_b),                 //          .b
+		.ci_slave_c          (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_c),                 //          .c
+		.ci_slave_ipending   (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_ipending),          //          .ipending
+		.ci_slave_estatus    (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_estatus),           //          .estatus
+		.ci_slave_clk        (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_clk),               //          .clk
+		.ci_slave_clken      (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_clk_en),            //          .clk_en
+		.ci_slave_reset_req  (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_reset_req),         //          .reset_req
+		.ci_slave_reset      (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_reset),             //          .reset
+		.ci_slave_start      (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_start),             //          .start
+		.ci_slave_done       (nios2_gen2_custom_instruction_master_multi_xconnect_ci_master0_done),              //          .done
+		.ci_master_dataa     (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_dataa),     // ci_master.dataa
+		.ci_master_datab     (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_datab),     //          .datab
+		.ci_master_result    (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_result),    //          .result
+		.ci_master_n         (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_n),         //          .n
+		.ci_master_clk       (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_clk),       //          .clk
+		.ci_master_clken     (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_clk_en),    //          .clk_en
+		.ci_master_reset_req (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_reset_req), //          .reset_req
+		.ci_master_reset     (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_reset),     //          .reset
+		.ci_master_start     (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_start),     //          .start
+		.ci_master_done      (nios2_gen2_custom_instruction_master_multi_slave_translator0_ci_master_done),      //          .done
+		.ci_master_readra    (),                                                                                 // (terminated)
+		.ci_master_readrb    (),                                                                                 // (terminated)
+		.ci_master_writerc   (),                                                                                 // (terminated)
+		.ci_master_a         (),                                                                                 // (terminated)
+		.ci_master_b         (),                                                                                 // (terminated)
+		.ci_master_c         (),                                                                                 // (terminated)
+		.ci_master_ipending  (),                                                                                 // (terminated)
+		.ci_master_estatus   ()                                                                                  // (terminated)
 	);
 
 	nios2_subsystem_mm_interconnect_0 mm_interconnect_0 (

@@ -30,7 +30,7 @@ module AudioVisualizer
     output logic gnd
 );
 
-    assign clk_out = data_back[1];
+    assign clk_out = rdreq_sig; //data_back[0];
     assign clk_out2 = AUD_ADC_LRCK;
     assign gnd = 1'b0;
 
