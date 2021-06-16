@@ -40,8 +40,6 @@ module VGA_Controller
 	 assign sound_height[17] = 6'd3;
 	 assign sound_height[18] = 6'd12;
 	 assign sound_height[19] = 6'd13;
-	 
-	 logic [23:0]counter = 23'd0;
     
     logic VGA_HS_in, VGA_VS_in, ADV_BLANK_N_in;
     logic [9:0] h_counter, h_counter_in;
@@ -50,8 +48,6 @@ module VGA_Controller
     logic [9:0] x_pos, y_pos;   // Holds the current zero-based horizontal and vertical position
 
     logic [23:0] color;
-
-    logic [5:0] rect_counter = 6'd48;    //0 to 48 rectangles. every second + 1
 
     always_ff @ (posedge VGA_CLK)
     begin
@@ -143,25 +139,42 @@ module VGA_Controller
         end
 
         if (inRange)
-            // TODO: implement some more colors
             begin
 						if (y_pos >= 0 && y_pos < 99)
-							return 24'hFF0000;						//red
+							if(y_pos < 30)
+								//make top 3 blocks completely red
+								return 24'hFF0000;
+							else
+								//16711680 == 24'hFF0000 to set red to max because there is no change in the gradient
+								//everything behind the plus is to calculate the gradient of green
+								//117 == the color difference of the green spectrum between 24'hFF7500 and 24'hFF0000
+								//y_pos - 30 is the start of the gradient. everything before y = 30 is completely red
+								//69 is the range of the gradient. gradient starts at 30 and ends at 99
+								//256 is used to convert the value from being in the blue range to green
+								//RGB --> B = 24'h000075 * 256 = 24'h007500 = G --> RGB
+								//blue isn't calculated during the calculation because it should be 00
+								
+								return 16711680 + (117 * (y_pos - 30) / 69 * 256);
 						else
 							begin
 								if(y_pos >= 100 && y_pos < 129)
-									return 24'hFF7500;				//orange
+									//make 3 blocks completely orange
+									return 24'hFF7500;
 								else
-									return 24'h00FF00;
-									//return 24'h23F6F0;				//blue
+									//calculate gradient for green (see explenation at red)
+									return ((256 * (479 - y_pos)) / 352 * 256 * 256) + (((139 * (y_pos - 130)) / 352 + 117) * 256);
 							end
 				end
         else
-				return (256 * (y_pos) / 479) + (256 * (x_pos) / 639 * 256) + (256 * y_pos / 479 * 256 * 256);
-//            return 24'h000000;									//background
+				if(y_pos > 240)
+					//make blue-black background gradient
+					return ((200 * (y_pos - 240)) / 240);
+				else
+					//make top half of the background black
+					return 24'h000000;
     end
     endfunction
-
+	 
     function logic isInRange
     (
         // values should be > 0 (so >= 1) with x-values <= 640 and y-values <= 480
