@@ -50,7 +50,7 @@ always @(posedge done)
         ROM[2] = {7'd4, 1'b0, 8'b0000_1_010};       // all default (bypass on (b3), adc to line-in (b2) )
         ROM[0] = {7'd6, 1'b0, 8'b01101010};         // poweroff clockout (b6), internal osc. (b5), DAC (b3), microphone (b1)
         ROM[1] = {7'd7, 1'b0, 8'b01000001};         // b6 = 1 (master mode), b3,b2 = 00 (16-bits format), b1,b0 = 01 (msb, left-justified)
-        ROM[3] = {7'd8, 1'b0, 8'b00001110};         // SR (b5-2) = 0011, BOSR=1, normal mode. So 96KHz ADC, 18,432 MCLK freq.
+        ROM[3] = {7'd8, 1'b0, 8'b00001110};         // SR (b5-2) = 0011, BOSR=1, normal mode. So 8KHz ADC, 18,432 MCLK freq.
         //ROM[4]= 16'h1e00;                         // reset
         ROM[`rom_size]= {7'd9, 8'b00000000, 1'b1};  // active
         DATA_A=ROM[address];
