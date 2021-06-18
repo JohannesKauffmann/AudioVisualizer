@@ -30,11 +30,12 @@ module AudioVisualizer
     output logic gnd
 );
 
-    assign clk_out = rdreq_sig; //data_back[0];
+    assign clk_out = wrreq_sig; //data_back[0];
     assign clk_out2 = AUD_ADC_LRCK;
     assign gnd = 1'b0;
 
-    wire [31:0] data_sig, q_sig, data_back;    // Wires used to connect the FIFO input and output
+    wire [31:0] data_sig, q_sig, data_back;    // Wires used to connect the FIFO input and output data
+    wire wrreq_sig, rdreq_sig;
 
     // majority3 function
     assign f = (x1 && x2) || (x2 && x3) || (x1 && x3);
@@ -59,11 +60,12 @@ module AudioVisualizer
         .VGA_B      (VGA_B)
     );
 
-    fifo fifo_inst(
-        .data   ( data_sig ),
-        .wrclk  ( AUD_BCLK ),
-        .wrreq  ( wrreq_sig ),
-        .wrfull ( wrfull_sig ),
+    fifo fifo_inst (
+        .data       ( data_sig ),
+        .wrclk      ( AUD_BCLK ),
+        .wrreq      ( wrreq_sig ),
+        .wrempty    ( wrempty_sig ),
+        .wrfull     ( wrfull_sig ),
 
         .q          ( q_sig ),
         .rdclk      ( CLOCK_50 ),
@@ -98,6 +100,7 @@ module AudioVisualizer
         .AUD_BCLK       (AUD_BCLK),
         .AUD_ADC_DATA   (AUD_ADC_DAT),
 
+        .wrempty_sig    (wrempty_sig),
         .wrfull_sig     (wrfull_sig),
         .wrreq_sig      (wrreq_sig),
         .data_sig       (data_sig)

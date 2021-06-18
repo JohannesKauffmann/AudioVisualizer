@@ -4,6 +4,7 @@ module AudioController
                     AUD_BCLK,       // Audio bitclock
                     AUD_ADC_DATA,   // Audio data line
 
+                    wrempty_sig,    // FIFO empty indicator
                     wrfull_sig,     // FIFO full indicator
 
     output logic    wrreq_sig,      // FIFO write request input
@@ -11,6 +12,8 @@ module AudioController
     output logic [31:0] data_sig    // FIFO data input
 );
     parameter [4:0] dataLength = 5'd16; // Bit depth is 16 bits.
+    
+    logic writingBlocked = 1'b0;
 
     reg [4:0] left_counter = 5'd0;      // Counters for each audio channel.
     reg [4:0] right_counter = 5'd0;
@@ -18,14 +21,19 @@ module AudioController
 
 //    always_ff @ (posedge AUD_ADC_CLK)
 //    begin
-//        if (audio_data == 32'b1)
-//            audio_data <= 32'b0;
-//        else
-//            audio_data <= 32'b1;
+//        audio_data <= audio_data + 1;
 //    end
 
     always_ff @ (posedge AUD_BCLK)
     begin
+        data_sig <= audio_data;
+    
+//        if (wrfull_sig == 1'b1)
+//            writingBlocked = 1'b1;
+//        
+//        if (wrempty_sig == 1'b1)
+//            writingBlocked = 1'b0;
+
         // Depending on the left/right channel, increment counter for current channel
         // and reset the counter for the other channel.
         if (AUD_ADC_CLK)
@@ -52,11 +60,11 @@ module AudioController
             end
 
             // Write data to FIFO after last bit has been received
+//            if (right_counter == dataLength && wrfull_sig == 1'b0 && writingBlocked == 1'b0)
             if (right_counter == dataLength && wrfull_sig == 1'b0)
             begin
                 wrreq_sig <= 1'b1;
-                data_sig <= audio_data;
-                right_counter = right_counter + 1'b1;
+                right_counter <= right_counter + 1'b1;
             end
             else
             begin

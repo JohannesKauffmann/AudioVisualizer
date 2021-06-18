@@ -1,27 +1,13 @@
 #include "altera_avalon_pio_regs.h"
 #include "system.h"
-
-#include <stdio.h>
-#include <string.h>
-//#include <unistd.h>
 #include "sys/alt_stdio.h"
 
-//#include "fft.h"
-
-
-
-
-
-
-
-
-
-
-
-
-
+#include <stdio.h>
 #include <complex>
-#define MAX 1024
+
+#include <math.h>
+
+#define SAMPLE_SIZE 256
 
 using namespace std;
 
@@ -54,7 +40,7 @@ int reverse(int N, int n)    //calculating revers number
 
 void ordina(complex<float>* f1, int N) //using the reverse order in the array
 {
-  complex<float> f2[MAX];
+  complex<float> f2[SAMPLE_SIZE];
   for(int i = 0; i < N; i++)
     f2[i] = f1[reverse(N, i)];
   for(int j = 0; j < N; j++)
@@ -94,44 +80,22 @@ void FFT(complex<float>* f, int N, double d)
     f[i] *= d; //multiplying by step
 }
 
-//int main()
-//{
-//  int n;
-//  do {
-//    cout << "specify array dimension (MUST be power of 2)" << endl;
-//    cin >> n;
-//  } while(!check(n));
-//  double d;
-//  cout << "specify sampling step" << endl; //just write 1 in order to have the same results of matlab fft(.)
-//  cin >> d;
-//  complex<float> vec[MAX];
-//  cout << "specify the array" << endl;
-//  for(int i = 0; i < n; i++) {
-//    cout << "specify element number: " << i << endl;
-//    cin >> vec[i];
-//  }
-//  FFT(vec, n, d);
-//  cout << "...printing the FFT of the array specified" << endl;
-//  for(int j = 0; j < n; j++)
-//    cout << vec[j] << endl;
-//  return 0;
-//}
+float calculateMagnitude(complex<float>* f, float* f2)
+{
+	float max = 0;
+    for(int i = 0; i < SAMPLE_SIZE; i++)
+    {
+    	float tmp = sqrtf(pow(f[i].real(), 2) + pow(f[i].imag(), 2));
+    	if (tmp > max)
+    	{
+    		max = tmp;
+    	}
+        f2[i] = tmp;
+    }
+    return max;
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-const alt_u16 sample_size = 1024;
 
 int main()
 {
@@ -139,64 +103,54 @@ int main()
 
 	alt_u8 readRequest = 0;
 	alt_u8 empty = 0;
-	alt_u32 aud_data = 0;
+	alt_32 aud_data = 0;
 
-	alt_u16 sample_cnt = 0;
-//	float *samples = new float[sample_size];// { 0 };
-//	memset(samples, 0, (unsigned int)(sample_size * sizeof(float)));
-	complex<float> samples[sample_size] = { 0 };
+	complex<float> samples_f[SAMPLE_SIZE] = { 0 };
+	alt_16 samples[SAMPLE_SIZE] = { 0 };
+	float amplitudes[SAMPLE_SIZE] = { 0 };
 
-	complex<float> x;
+	alt_u8 counter = 0;
+
+	alt_u32 getal = 0;
 
 	while (1)
 	{
-		IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, aud_data);
+		empty = IORD_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDEMPTY_BASE);
 
-		if ((sample_cnt + 1) == sample_size)
+		if (empty == 0)
 		{
-			// Got 1024 samples!
-//			float *tmp = new float[sample_size];
-			complex<float> tmp[sample_size] = { 0 };
-			memcpy(tmp, samples, (unsigned int) sample_size * sizeof(complex<float>));
-			x = tmp[0];
+			readRequest = 1;
+			IOWR_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDREQ_BASE, readRequest);
 
-			FFT(tmp, (int) sample_size, 1.0);
+			aud_data = IORD_ALTERA_AVALON_PIO_DATA(PIO_FIFO_Q_BASE);
 
-//			float *delete_me = ComplexFFT(tmp, (unsigned long int) sample_size, 96000, 1);
-//			delete[] delete_me;
-//			delete[] tmp;
+			alt_16 local = aud_data & 0x0000FFFF;
 
-			sample_cnt = 0;
+//			if (local != 0 && local != 61440)
+//			{
+//				alt_printf("woat is det den\n");
+//			}
+
+			samples_f[counter] = (complex<float>) local;
+			samples[counter] = local;
+			counter++;
+
+			readRequest = 0;
+			IOWR_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDREQ_BASE, readRequest);
 		}
-		else
+
+		if (counter + 1 == SAMPLE_SIZE)
 		{
-			// Read data until 1024 samples.
-			empty = IORD_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDEMPTY_BASE);
+			FFT(samples_f, (int) SAMPLE_SIZE, 1.0);
 
-			if (empty == 1)
-			{
+			float max = calculateMagnitude(samples_f, amplitudes);
+			getal = (alt_u32) max;
 
-			}
-			else
-			{
-				readRequest = 1;
-				IOWR_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDREQ_BASE, readRequest);
-
-				// Read FIFO
-				aud_data = IORD_ALTERA_AVALON_PIO_DATA(PIO_FIFO_Q_BASE);
-
-				// Convert read value to 16 bits.
-				alt_u16 left_data = (aud_data & 0xFFFF0000) >> 16;
-
-				// Store as float.
-				samples[sample_cnt] = (complex<float>) left_data;
-				sample_cnt++;
-
-				readRequest = 0;
-				IOWR_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDREQ_BASE, readRequest);
-			}
+			counter = 0;
+//			getal = samples_f[0].real();
+//			getal = samples[0];
 		}
 	}
 
-	return (int) x.real();
+	return (int) getal;
 }
