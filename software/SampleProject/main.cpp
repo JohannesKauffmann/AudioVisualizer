@@ -82,19 +82,14 @@ void FFT(complex<float>* f, int N, double d)
 
 #define y 2,7411 //log 1,44025(x). Berekend middels z^19 = SAMPLE_SIZE. z = 1,44025. Dus y * log(x) == log 1,44025(x)
 
-float calculateMagnitude(complex<float>* f, float* f2)
+void calculateMagnitude(complex<float>* f, float* f2)
 {
-	float max = 0;
     for(int i = 0; i < SAMPLE_SIZE; i++)
     {
-    	float tmp = sqrtf(pow(f[i].real(), 2) + pow(f[i].imag(), 2));
-    	if (tmp > max)
-    	{
-    		max = tmp;
-    	}
-        f2[i] = tmp;
+    	float amplitude = sqrtf(pow(f[i].real(), 2) + pow(f[i].imag(), 2));
+    	f2[i] = 20 * (log10 (amplitude / 1800000));
+    	//power_db = 20 * log10(amp / amp_ref);
     }
-    return max;
 }
 
 
@@ -139,13 +134,12 @@ int main()
 			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 1);
 			FFT(samples_f, (int) SAMPLE_SIZE, 1.0);
 
-			float max = calculateMagnitude(samples_f, amplitudes);
+			calculateMagnitude(samples_f, amplitudes);
 			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 0);
-			getal = (alt_u32) max;
 
 			counter = 0;
 //			getal = samples_f[0].real();
-//			getal = samples[0];
+			getal = amplitudes[0];
 		}
 	}
 
