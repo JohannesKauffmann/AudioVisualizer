@@ -80,6 +80,8 @@ void FFT(complex<float>* f, int N, double d)
     f[i] *= d; //multiplying by step
 }
 
+#define y 2,7411 //log 1,44025(x). Berekend middels z^19 = SAMPLE_SIZE. z = 1,44025. Dus y * log(x) == log 1,44025(x)
+
 float calculateMagnitude(complex<float>* f, float* f2)
 {
 	float max = 0;
@@ -106,10 +108,9 @@ int main()
 	alt_32 aud_data = 0;
 
 	complex<float> samples_f[SAMPLE_SIZE] = { 0 };
-	alt_16 samples[SAMPLE_SIZE] = { 0 };
 	float amplitudes[SAMPLE_SIZE] = { 0 };
 
-	alt_u8 counter = 0;
+	alt_u16 counter = 0;
 
 	alt_u32 getal = 0;
 
@@ -126,13 +127,7 @@ int main()
 
 			alt_16 local = aud_data & 0x0000FFFF;
 
-//			if (local != 0 && local != 61440)
-//			{
-//				alt_printf("woat is det den\n");
-//			}
-
 			samples_f[counter] = (complex<float>) local;
-			samples[counter] = local;
 			counter++;
 
 			readRequest = 0;
@@ -141,9 +136,11 @@ int main()
 
 		if (counter + 1 == SAMPLE_SIZE)
 		{
+			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 1);
 			FFT(samples_f, (int) SAMPLE_SIZE, 1.0);
 
 			float max = calculateMagnitude(samples_f, amplitudes);
+			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 0);
 			getal = (alt_u32) max;
 
 			counter = 0;
@@ -152,5 +149,5 @@ int main()
 		}
 	}
 
-	return (int) getal;
+	return (int) getal + (int) amplitudes[0] + (int) samples_f[0].real();
 }
