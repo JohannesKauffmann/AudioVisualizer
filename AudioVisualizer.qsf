@@ -144,7 +144,6 @@ set_location_assignment PIN_AB22 -to clk_out
 set_location_assignment PIN_Y16 -to clk_out2
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to clk_out2
 set_global_assignment -name QIP_FILE src/megafunctions/fifo/fifo.qip
-set_global_assignment -name SIGNALTAP_FILE output_files/stp1.stp
 set_global_assignment -name ENABLE_SIGNALTAP ON
 set_global_assignment -name USE_SIGNALTAP_FILE debug.stp
 set_global_assignment -name SLD_NODE_CREATOR_ID 110 -section_id auto_signaltap_0
