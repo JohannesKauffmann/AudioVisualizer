@@ -7,7 +7,7 @@
 
 #include <math.h>
 
-#define SAMPLE_SIZE 256
+#define SAMPLE_SIZE 1024
 
 using namespace std;
 
@@ -80,19 +80,59 @@ void FFT(complex<float>* f, int N, double d)
     f[i] *= d; //multiplying by step
 }
 
-#define y 2,7411 //log 1,44025(x). Berekend middels z^19 = SAMPLE_SIZE. z = 1,44025. Dus y * log(x) == log 1,44025(x)
+#define y 3.0457 //log 1,44025(x). Berekend middels z^19 = SAMPLE_SIZE / 2. z = 1,38865. Dus y * log(x) == log 1,38865(x)
 
-void calculateMagnitude(complex<float>* f, float* f2)
+void calculateMagnitude(complex<float>* f, float *decibels, alt_u8 *frequencyIndex, alt_u8 *chart_data, size_t length)
 {
-    for(int i = 0; i < SAMPLE_SIZE; i++)
+	alt_u8 counter = 0; 		// Keeps track of which horizontal square we are in. values >= 0, < 20.
+	alt_8 max_db = INT8_MIN;	// Db values are negative from -80 to 0, so any value should be larger than int8_min.
+
+    for (int i = 0; i < length; i++)
     {
     	float amplitude = sqrtf(pow(f[i].real(), 2) + pow(f[i].imag(), 2));
-    	f2[i] = 20 * (log10 (amplitude / 1800000));
+    	float calculated_db = 20 * (log10 (amplitude / 7500000));
+
+    	if (calculated_db < -80)
+    	{
+    		decibels[i] = -80;
+    	}
+    	else
+    	{
+    		decibels[i] = calculated_db;
+    	}
     	//power_db = 20 * log10(amp / amp_ref);
+
+    	// Check if next value is in next horizontal square.
+    	alt_u8 tmp_counter = frequencyIndex[i];
+
+    	if (tmp_counter > counter)
+    	{
+    		counter = tmp_counter;
+    		max_db = INT8_MIN; // Reset maximum db.
+    	}
+
+    	if (decibels[i] > max_db)
+    	{
+    		max_db = decibels[i];
+    		chart_data[counter] = (48 - roundf( ((float) max_db / (float) -80) * (float) 48) );
+    	}
     }
 }
 
-
+void calculateFrequencyIndex(alt_u8 *array, size_t length)
+{
+	for (int i = 0; i < length; i++)
+	{
+    	if (i < 2)
+    	{
+    		array[i] = i;
+    	}
+    	else
+    	{
+    		array[i] = (alt_u8) roundf( y * logf(i) );
+    	}
+	}
+}
 
 int main()
 {
@@ -103,7 +143,11 @@ int main()
 	alt_32 aud_data = 0;
 
 	complex<float> samples_f[SAMPLE_SIZE] = { 0 };
-	float amplitudes[SAMPLE_SIZE] = { 0 };
+	float decibels[SAMPLE_SIZE / 2] = { 0 };
+	alt_u8 frequencyIndex[SAMPLE_SIZE / 2] = { 0 };
+	alt_u8 chart_data[20] = { 0 };
+
+	calculateFrequencyIndex(frequencyIndex, SAMPLE_SIZE / 2);
 
 	alt_u16 counter = 0;
 
@@ -134,14 +178,15 @@ int main()
 			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 1);
 			FFT(samples_f, (int) SAMPLE_SIZE, 1.0);
 
-			calculateMagnitude(samples_f, amplitudes);
+			calculateMagnitude(samples_f, decibels, frequencyIndex, chart_data, SAMPLE_SIZE / 2);
+
 			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 0);
 
 			counter = 0;
 //			getal = samples_f[0].real();
-			getal = amplitudes[0];
+			getal = decibels[0];
 		}
 	}
 
-	return (int) getal + (int) amplitudes[0] + (int) samples_f[0].real();
+	return (int) getal + (int) decibels[0] + (int) samples_f[0].real() + (int) chart_data[0];
 }
