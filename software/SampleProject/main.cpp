@@ -80,19 +80,14 @@ void FFT(complex<float>* f, int N, double d)
     f[i] *= d; //multiplying by step
 }
 
-float calculateMagnitude(complex<float>* f, float* f2)
+void calculateMagnitude(complex<float>* f, float* f2)
 {
-	float max = 0;
     for(int i = 0; i < SAMPLE_SIZE; i++)
     {
-    	float tmp = sqrtf(pow(f[i].real(), 2) + pow(f[i].imag(), 2));
-    	if (tmp > max)
-    	{
-    		max = tmp;
-    	}
-        f2[i] = tmp;
+    	float amplitude = sqrtf(pow(f[i].real(), 2) + pow(f[i].imag(), 2));
+    	f2[i] = 20 * (log10 (amplitude / 1800000));
+    	//power_db = 20 * log10(amp / amp_ref);
     }
-    return max;
 }
 
 
@@ -143,12 +138,11 @@ int main()
 		{
 			FFT(samples_f, (int) SAMPLE_SIZE, 1.0);
 
-			float max = calculateMagnitude(samples_f, amplitudes);
-			getal = (alt_u32) max;
+			calculateMagnitude(samples_f, amplitudes);
 
 			counter = 0;
 //			getal = samples_f[0].real();
-//			getal = samples[0];
+			getal = amplitudes[0];
 		}
 	}
 
