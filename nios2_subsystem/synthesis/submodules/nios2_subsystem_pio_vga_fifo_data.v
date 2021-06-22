@@ -18,22 +18,22 @@
 // altera message_level Level1 
 // altera message_off 10034 10035 10036 10037 10230 10240 10030 
 
-module nios2_subsystem_pio_data_back (
-                                       // inputs:
-                                        address,
-                                        chipselect,
-                                        clk,
-                                        reset_n,
-                                        write_n,
-                                        writedata,
+module nios2_subsystem_pio_vga_fifo_data (
+                                           // inputs:
+                                            address,
+                                            chipselect,
+                                            clk,
+                                            reset_n,
+                                            write_n,
+                                            writedata,
 
-                                       // outputs:
-                                        out_port,
-                                        readdata
-                                     )
+                                           // outputs:
+                                            out_port,
+                                            readdata
+                                         )
 ;
 
-  output           out_port;
+  output  [ 31: 0] out_port;
   output  [ 31: 0] readdata;
   input   [  1: 0] address;
   input            chipselect;
@@ -44,19 +44,19 @@ module nios2_subsystem_pio_data_back (
 
 
 wire             clk_en;
-reg              data_out;
-wire             out_port;
-wire             read_mux_out;
+reg     [ 31: 0] data_out;
+wire    [ 31: 0] out_port;
+wire    [ 31: 0] read_mux_out;
 wire    [ 31: 0] readdata;
   assign clk_en = 1;
   //s1, which is an e_avalon_slave
-  assign read_mux_out = {1 {(address == 0)}} & data_out;
+  assign read_mux_out = {32 {(address == 0)}} & data_out;
   always @(posedge clk or negedge reset_n)
     begin
       if (reset_n == 0)
           data_out <= 0;
       else if (chipselect && ~write_n && (address == 0))
-          data_out <= writedata;
+          data_out <= writedata[31 : 0];
     end
 
 

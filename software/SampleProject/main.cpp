@@ -7,7 +7,7 @@
 
 #include <math.h>
 
-#define SAMPLE_SIZE 1024
+#define SAMPLE_SIZE 256
 
 using namespace std;
 
@@ -175,12 +175,39 @@ int main()
 
 		if (counter + 1 == SAMPLE_SIZE)
 		{
-			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 1);
+			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 0);
+
 			FFT(samples_f, (int) SAMPLE_SIZE, 1.0);
 
 			calculateMagnitude(samples_f, decibels, frequencyIndex, chart_data, SAMPLE_SIZE / 2);
 
-			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 0);
+			for (int i = 0; i < 20; i = i + 4)
+			{
+				alt_u32 value = 0;
+
+				alt_u32 lsb 			= chart_data[i];
+				alt_u32 left_from_lsb 	= ( (alt_u32) chart_data[i + 1] ) << 8;
+				alt_u32 right_from_msb 	= ( (alt_u32) chart_data[i + 2] ) << 16;
+				alt_u32 msb 			= ( (alt_u32) chart_data[i + 3] ) << 24;
+
+				value |= lsb;
+				value |= left_from_lsb;
+				value |= right_from_msb;
+				value |= msb;
+
+				alt_u8 full = IORD_ALTERA_AVALON_PIO_DATA(PIO_VGA_FIFO_FULL_BASE);
+
+				if (full == 0)
+				{
+					IOWR_ALTERA_AVALON_PIO_DATA(PIO_VGA_FIFO_WRREQ_BASE, 1);
+
+					IOWR_ALTERA_AVALON_PIO_DATA(PIO_VGA_FIFO_DATA_BASE, value);
+
+					IOWR_ALTERA_AVALON_PIO_DATA(PIO_VGA_FIFO_WRREQ_BASE, 0);
+				}
+			}
+
+			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 1);
 
 			counter = 0;
 //			getal = samples_f[0].real();

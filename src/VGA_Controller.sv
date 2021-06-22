@@ -2,6 +2,8 @@ module VGA_Controller
 (
     input   logic   CLK,
                     VGA_CLK,
+    
+    input logic [5:0] height[19:0],
 
     output  logic   ADV_BLANK_N,
                     ADV_SYNC_N,
@@ -18,28 +20,28 @@ module VGA_Controller
     parameter [9:0] H_TOTAL = 10'd800;
     parameter [9:0] V_TOTAL = 10'd525;
 	 
-	 bit [19:0] [5:0] sound_height;
+    logic [5:0] sound_height[19:0];
 	 
-	 assign sound_height[0] = 6'd48;
-	 assign sound_height[1] = 6'd24;
-	 assign sound_height[2] = 6'd23;
-	 assign sound_height[3] = 6'd20;
-	 assign sound_height[4] = 6'd17;
-	 assign sound_height[5] = 6'd0;
-	 assign sound_height[6] = 6'd40;
-	 assign sound_height[7] = 6'd3;
-	 assign sound_height[8] = 6'd12;
-	 assign sound_height[9] = 6'd13;
-	 assign sound_height[10] = 6'd48;
-	 assign sound_height[11] = 6'd24;
-	 assign sound_height[12] = 6'd23;
-	 assign sound_height[13] = 6'd20;
-	 assign sound_height[14] = 6'd17;
-	 assign sound_height[15] = 6'd28;
-	 assign sound_height[16] = 6'd40;
-	 assign sound_height[17] = 6'd3;
-	 assign sound_height[18] = 6'd12;
-	 assign sound_height[19] = 6'd13;
+//	 assign sound_height[0] = 6'd48;
+//	 assign sound_height[1] = 6'd24;
+//	 assign sound_height[2] = 6'd23;
+//	 assign sound_height[3] = 6'd20;
+//	 assign sound_height[4] = 6'd17;
+//	 assign sound_height[5] = 6'd0;
+//	 assign sound_height[6] = 6'd40;
+//	 assign sound_height[7] = 6'd3;
+//	 assign sound_height[8] = 6'd12;
+//	 assign sound_height[9] = 6'd13;
+//	 assign sound_height[10] = 6'd48;
+//	 assign sound_height[11] = 6'd24;
+//	 assign sound_height[12] = 6'd23;
+//	 assign sound_height[13] = 6'd20;
+//	 assign sound_height[14] = 6'd17;
+//	 assign sound_height[15] = 6'd28;
+//	 assign sound_height[16] = 6'd40;
+//	 assign sound_height[17] = 6'd3;
+//	 assign sound_height[18] = 6'd12;
+//	 assign sound_height[19] = 6'd13;
     
     logic VGA_HS_in, VGA_VS_in, ADV_BLANK_N_in;
     logic [9:0] h_counter, h_counter_in;
@@ -56,6 +58,8 @@ module VGA_Controller
         ADV_BLANK_N <= ADV_BLANK_N_in;
         h_counter <= h_counter_in;
         v_counter <= v_counter_in;
+        
+        sound_height <= height;
 
         VGA_R <= color[23:16];
         VGA_G <= color[15:8];
