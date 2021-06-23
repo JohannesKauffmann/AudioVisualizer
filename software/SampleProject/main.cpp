@@ -6,8 +6,9 @@
 #include <complex>
 
 #include <math.h>
+#include <string.h>
 
-#define SAMPLE_SIZE 256
+#define SAMPLE_SIZE 512
 
 using namespace std;
 
@@ -80,17 +81,22 @@ void FFT(complex<float>* f, int N, double d)
     f[i] *= d; //multiplying by step
 }
 
-#define y 3.0457 //log 1,44025(x). Berekend middels z^19 = SAMPLE_SIZE / 2. z = 1,38865. Dus y * log(x) == log 1,38865(x)
+//#define y 3.91588 //log 1,44025(x). Berekend middels z^19 = SAMPLE_SIZE / 2. z = 1,29094. Dus y * log(x) == log 1,29094(x)	//samplesize=256 mist frequencyindex 2
+//#define y 3.0457 //log 1,38865(x). Berekend middels z^19 = SAMPLE_SIZE / 2. z = 1,38865. Dus y * log(x) == log 1,38865(x)		//samplesize=1024
+#define y 3.60672 //log 1,31951(x). Berekend middels z^20 = SAMPLE_SIZE / 2. z = 1,31951. Dus y * log(x) == log 1,31951(x)		//samplesize=512
+
+#define AMPLITUDE_REFERENCE 3700000
 
 void calculateMagnitude(complex<float>* f, float *decibels, alt_u8 *frequencyIndex, alt_u8 *chart_data, size_t length)
 {
 	alt_u8 counter = 0; 		// Keeps track of which horizontal square we are in. values >= 0, < 20.
 	alt_8 max_db = INT8_MIN;	// Db values are negative from -80 to 0, so any value should be larger than int8_min.
+//	alt_8 avg_db = INT8_MIN;
 
     for (int i = 0; i < length; i++)
     {
     	float amplitude = sqrtf(pow(f[i].real(), 2) + pow(f[i].imag(), 2));
-    	float calculated_db = 20 * (log10 (amplitude / 7500000));
+    	float calculated_db = 20 * (log10 (amplitude / AMPLITUDE_REFERENCE));
 
     	if (calculated_db < -80)
     	{
@@ -109,6 +115,7 @@ void calculateMagnitude(complex<float>* f, float *decibels, alt_u8 *frequencyInd
     	{
     		counter = tmp_counter;
     		max_db = INT8_MIN; // Reset maximum db.
+//    		avg_db = INT8_MIN;
     	}
 
     	if (decibels[i] > max_db)
@@ -129,7 +136,8 @@ void calculateFrequencyIndex(alt_u8 *array, size_t length)
     	}
     	else
     	{
-    		array[i] = (alt_u8) roundf( y * logf(i) );
+//    		array[i] = (alt_u8) roundf( y * logf(i) );
+    		array[i] = (alt_u8) floorf( y * logf(i) ); //floor alleen met z^20 ipv 19.
     	}
 	}
 }
@@ -146,6 +154,7 @@ int main()
 	float decibels[SAMPLE_SIZE / 2] = { 0 };
 	alt_u8 frequencyIndex[SAMPLE_SIZE / 2] = { 0 };
 	alt_u8 chart_data[20] = { 0 };
+//	alt_u8 chart_data[20] = { 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48 };
 
 	calculateFrequencyIndex(frequencyIndex, SAMPLE_SIZE / 2);
 
@@ -174,37 +183,19 @@ int main()
 		}
 
 		if (counter + 1 == SAMPLE_SIZE)
-		{
-			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 0);
+		{IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 0);
 
 			FFT(samples_f, (int) SAMPLE_SIZE, 1.0);
 
 			calculateMagnitude(samples_f, decibels, frequencyIndex, chart_data, SAMPLE_SIZE / 2);
+			memset(samples_f, 0, sizeof(complex<float>) * SAMPLE_SIZE);
 
-			for (int i = 0; i < 20; i = i + 4)
+			for (int i = 0; i < 20; i++)
 			{
-				alt_u32 value = 0;
-
-				alt_u32 lsb 			= chart_data[i];
-				alt_u32 left_from_lsb 	= ( (alt_u32) chart_data[i + 1] ) << 8;
-				alt_u32 right_from_msb 	= ( (alt_u32) chart_data[i + 2] ) << 16;
-				alt_u32 msb 			= ( (alt_u32) chart_data[i + 3] ) << 24;
-
-				value |= lsb;
-				value |= left_from_lsb;
-				value |= right_from_msb;
-				value |= msb;
-
-				alt_u8 full = IORD_ALTERA_AVALON_PIO_DATA(PIO_VGA_FIFO_FULL_BASE);
-
-				if (full == 0)
-				{
-					IOWR_ALTERA_AVALON_PIO_DATA(PIO_VGA_FIFO_WRREQ_BASE, 1);
-
-					IOWR_ALTERA_AVALON_PIO_DATA(PIO_VGA_FIFO_DATA_BASE, value);
-
-					IOWR_ALTERA_AVALON_PIO_DATA(PIO_VGA_FIFO_WRREQ_BASE, 0);
-				}
+				IOWR_ALTERA_AVALON_PIO_DATA(PIO_RAM_WRADDRESS_BASE, (alt_u8) i);
+				IOWR_ALTERA_AVALON_PIO_DATA(PIO_RAM_DATA_BASE, chart_data[i]);
+				IOWR_ALTERA_AVALON_PIO_DATA(PIO_RAM_WREN_BASE, 1);
+				IOWR_ALTERA_AVALON_PIO_DATA(PIO_RAM_WREN_BASE, 0);
 			}
 
 			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 1);

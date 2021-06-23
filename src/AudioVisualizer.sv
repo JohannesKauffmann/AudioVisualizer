@@ -27,11 +27,13 @@ module AudioVisualizer
     
     output logic clk_out,
     output logic clk_out2,
-    output logic gnd
+    output logic gnd,
+    
+    output logic [5:0] greenLeds
 );
 
-    assign clk_out = vga_fifo_rdreq_sig;
-    assign clk_out2 = vga_fifo_wrreq_sig;
+//    assign clk_out = vga_fifo_rdreq_sig;
+    assign clk_out2 = data_back;
     assign gnd = 1'b0;
 
     wire [31:0] data_sig, q_sig;    // Wires used to connect the FIFO input and output data
@@ -53,6 +55,7 @@ module AudioVisualizer
     VGA_Controller vga_inst (
         .CLK        (CLOCK_50),
         .VGA_CLK    (VGA_CLK),
+        .control_bit(control_bit),
         .height     (height_in),
         .ADV_BLANK_N(ADV_BLANK_N),
         .ADV_SYNC_N (ADV_SYNC_N),
@@ -77,94 +80,85 @@ module AudioVisualizer
         .rdfull     ( rdfull_sig )
     );
     
-    wire [31:0] vga_fifo_data_sig, vga_fifo_q_sig;
-    wire vga_fifo_rdreq_sig, vga_fifo_wrreq_sig;
+    wire [5:0] ram_data_sig, ram_q_sig, ram_rdaddress_sig, ram_wraddress_sig;
 
-    vga_fifo vga_fifo_inst (
-        .clock  ( CLOCK_50 ),
-        .data   ( vga_fifo_data_sig ),
-        .wrreq  ( vga_fifo_wrreq_sig ),
-        .full   ( vga_fifo_full_sig ),
-        .q      ( vga_fifo_q_sig ),
-        .rdreq  ( vga_fifo_rdreq_sig ),
-        .empty  ( vga_fifo_empty_sig )
-    );
-    
+    vga_ram	vga_ram_inst (
+        .clock      ( CLOCK_50 ),
+        .data       ( ram_data_sig ),
+        .rdaddress  ( ram_rdaddress_sig ),
+        .wraddress  ( ram_wraddress_sig ),
+        .wren       ( ram_wren_sig ),
+        .q          ( ram_q_sig )
+	);
+
+    logic control_bit = 1'b0;
     logic [5:0] height[19:0];
-    logic [3:0] counter = 4'd0;
+    logic [4:0] counter = 5'd0;
 
     logic canRead = 1'b0;
+    logic finished = 1'b0;
+    
+    logic [6:0] address_counter = 6'd0;
 
     always_ff @ (posedge CLOCK_50)
     begin
-        if (data_back == 1'b1)
+        control_bit <= ~canRead;
+
+        if (data_back == 1'b1 && finished == 1'b0)
         begin
             canRead <= 1'b1;
-            f <= 1'b1;
+//            f <= 1'b1;
         end
-        else
-            f <= 1'b1;
+        
+        if (data_back == 1'b0)
+        begin
+            finished <= 1'b0;
+//            f <= 1'b0;
+        end
 
         if (canRead == 1'b1)
         begin
-            counter <= counter + 4'd1;
-            
+            counter             <= counter + 5'd1;
+            address_counter     <= address_counter + 6'd1;
+            ram_rdaddress_sig   <= address_counter;
+
             case (counter)
-                4'd0:   begin
-                            vga_fifo_rdreq_sig <= 1'd1;
+//                5'd0:   begin
+//                            
+//                        end
+                5'd3:   begin
+                            height[counter - 3]   = ram_q_sig;
                         end
-                4'd1:   begin
-                            height[0]   <= vga_fifo_q_sig[5:0];
-                            height[1]   <= vga_fifo_q_sig[13:8];
-                            height[2]   <= vga_fifo_q_sig[21:16];
-                            height[3]   <= vga_fifo_q_sig[29:24];
-//                            f <= 1'b1;
-                        end
-                4'd2:   begin
-                            height[4]   <= vga_fifo_q_sig[5:0];
-                            height[5]   <= vga_fifo_q_sig[13:8];
-                            height[6]   <= vga_fifo_q_sig[21:16];
-                            height[7]   <= vga_fifo_q_sig[29:24];
-//                            f <= 1'b0;
-                        end
-                4'd3:   begin
-                            if (height[0] == height[4])
-                                f <= 1'b1;
-                            else
-                                f <= 1'b0;
-                            height[8]   <= vga_fifo_q_sig[5:0];
-                            height[9]   <= vga_fifo_q_sig[13:8];
-                            height[10]  <= vga_fifo_q_sig[21:16];
-                            height[11]  <= vga_fifo_q_sig[29:24];
-                        end
-                4'd4:   begin
-                            height[12]  <= vga_fifo_q_sig[5:0];
-                            height[13]  <= vga_fifo_q_sig[13:8];
-                            height[14]  <= vga_fifo_q_sig[21:16];
-                            height[15]  <= vga_fifo_q_sig[29:24];
-                        end
-                4'd5:   begin
-                            height[16]  <= vga_fifo_q_sig[5:0];
-                            height[17]  <= vga_fifo_q_sig[13:8];
-                            height[18]  <= vga_fifo_q_sig[21:16];
-                            height[19]  <= vga_fifo_q_sig[29:24];
-                        end
-                4'd6:   begin
-                            vga_fifo_rdreq_sig <= 1'd0;
+                5'd4:   height[counter - 3]   = ram_q_sig;
+                5'd5:   height[counter - 3]   = ram_q_sig;
+                5'd6:   height[counter - 3]   = ram_q_sig;
+                5'd7:   height[counter - 3]   = ram_q_sig;
+                5'd8:   height[counter - 3]   = ram_q_sig;
+                5'd9:   height[counter - 3]   = ram_q_sig;
+                5'd10:   height[counter - 3]   = ram_q_sig;
+                5'd11:   height[counter - 3]   = ram_q_sig;
+                5'd12:  height[counter - 3]   = ram_q_sig;
+                5'd13:  height[counter - 3]   = ram_q_sig;
+                5'd14:  height[counter - 3]   = ram_q_sig;
+                5'd15:  height[counter - 3]   = ram_q_sig;
+                5'd16:  height[counter - 3]   = ram_q_sig;
+                5'd17:  height[counter - 3]   = ram_q_sig;
+                5'd18:  height[counter - 3]   = ram_q_sig;
+                5'd19:  height[counter - 3]   = ram_q_sig;
+                5'd20:  height[counter - 3]   = ram_q_sig;
+                5'd21:  height[counter - 3]   = ram_q_sig;
+                5'd22:  height[counter - 3]   = ram_q_sig;
+                5'd23:  begin
                             canRead <= 1'b0;
-                            counter <= 4'd0;
+                            counter <= 5'd0;
+                            finished <= 1'b1;
+                            address_counter <= 1'd0;
                             height_in <= height;
-//                            f <= 1'b0;
                         end
             endcase
+            
+            greenLeds <= ram_q_sig;
         end
-//        else
-//        begin
-//            for (int i = 0; i < 20; i = i + 1)
-//            begin
-//                height[i] = 8'd0;
-//            end
-//        end
     end
 
     wire nios2_reset_n;
@@ -178,9 +172,9 @@ module AudioVisualizer
         .pio_fifo_rdempty_external_connection_export   ( rdempty_sig ),
         .pio_fifo_rdfull_external_connection_export    ( rdfull_sig ),
         .pio_fifo_rdreq_external_connection_export     ( rdreq_sig ),
-        .pio_vga_fifo_data_external_connection_export  ( vga_fifo_data_sig ),
-        .pio_vga_fifo_full_external_connection_export  ( vga_fifo_full_sig ),
-        .pio_vga_fifo_wrreq_external_connection_export ( vga_fifo_wrreq_sig ),
+        .pio_ram_data_external_connection_export       ( ram_data_sig ),
+        .pio_ram_wraddress_external_connection_export  ( ram_wraddress_sig ),
+        .pio_ram_wren_external_connection_export       ( ram_wren_sig ),
         .reset_reset_n                                 ( nios2_reset_n )
     );
 

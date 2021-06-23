@@ -3,7 +3,7 @@
 <name>nios2_subsystem</name>
 <peripherals>
 <peripheral>
-      <name>nios2_subsystem_pio_vga_fifo_wrreq_s1_altera_avalon_pio</name><baseAddress>0x00000000</baseAddress> 
+      <name>nios2_subsystem_pio_ram_wren_s1_altera_avalon_pio</name><baseAddress>0x00000000</baseAddress> 
       <addressBlock>
         <offset>0x0</offset>
         <size>32</size>
@@ -121,7 +121,7 @@
     </registers>
    </peripheral>
   <peripheral>
-      <name>nios2_subsystem_pio_vga_fifo_full_s1_altera_avalon_pio</name><baseAddress>0x00000000</baseAddress> 
+      <name>nios2_subsystem_pio_ram_wraddress_s1_altera_avalon_pio</name><baseAddress>0x00000000</baseAddress> 
       <addressBlock>
         <offset>0x0</offset>
         <size>32</size>
@@ -239,7 +239,7 @@
     </registers>
    </peripheral>
   <peripheral>
-      <name>nios2_subsystem_pio_vga_fifo_data_s1_altera_avalon_pio</name><baseAddress>0x00000000</baseAddress> 
+      <name>nios2_subsystem_pio_ram_data_s1_altera_avalon_pio</name><baseAddress>0x00000000</baseAddress> 
       <addressBlock>
         <offset>0x0</offset>
         <size>32</size>
