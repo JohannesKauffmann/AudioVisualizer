@@ -32,7 +32,7 @@ module AudioVisualizer
     output logic [5:0] greenLeds
 );
 
-//    assign clk_out = vga_fifo_rdreq_sig;
+    assign clk_out = control_bit;
     assign clk_out2 = data_back;
     assign gnd = 1'b0;
 
@@ -98,24 +98,18 @@ module AudioVisualizer
     logic canRead = 1'b0;
     logic finished = 1'b0;
     
+    logic data_back_old = 1'b0;
+    
     logic [6:0] address_counter = 6'd0;
 
     always_ff @ (posedge CLOCK_50)
     begin
         control_bit <= ~canRead;
-
-        if (data_back == 1'b1 && finished == 1'b0)
-        begin
-            canRead <= 1'b1;
-//            f <= 1'b1;
-        end
+        data_back_old <= data_back;
         
-        if (data_back == 1'b0)
-        begin
-            finished <= 1'b0;
-//            f <= 1'b0;
-        end
-
+        if (data_back_old == 1'b0 && data_back == 1'b1)
+            canRead <= 1'b1;
+        
         if (canRead == 1'b1)
         begin
             counter             <= counter + 5'd1;
@@ -151,13 +145,11 @@ module AudioVisualizer
                 5'd23:  begin
                             canRead <= 1'b0;
                             counter <= 5'd0;
-                            finished <= 1'b1;
                             address_counter <= 1'd0;
                             height_in <= height;
                         end
             endcase
             
-            greenLeds <= ram_q_sig;
         end
     end
 
