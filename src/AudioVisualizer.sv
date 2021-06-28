@@ -21,27 +21,27 @@ module AudioVisualizer
     output logic [7:0] VGA_G,
     output logic [7:0] VGA_B
 );
-	 // Wires used to connect the FIFO input and output data
+     // Wires used to connect the FIFO input and output data
     wire [31:0] data_sig, q_sig;    
-	 
-	 //Used for FIFO module
-    wire data_back, wrreq_sig, rdreq_sig;
-	 //Used for RAM module
+
+     //Used for FIFO module
+    wire data_back, wrreq_sig, rdreq_sig, wrempty_sig, wrfull_sig, rdempty_sig, rdfull_sig, ram_wren_sig;
+     //Used for RAM module
     wire [5:0] ram_data_sig, ram_q_sig, ram_rdaddress_sig, ram_wraddress_sig;
-	 
+
 	 //control bit is used in VGA_Controller for deciding which array to read and display on screen
 	 logic control_bit = 1'b0;
-	 
+
 	 //array's with height of every chart-bar
 	 logic [5:0] height[19:0];
 	 logic [5:0] height_in[19:0];
-	 
+
 	 //counter used for RAM case
     logic [4:0] counter = 5'd0;
 
 	 //when can_read is 1 ram has been writen and can be read without the data changing while reading.
     logic can_read = 1'b0;
-    
+
 	 //is used in combination with data_back to detect the posedge of data_back;
     logic data_back_old = 1'b0;
     

@@ -12,8 +12,6 @@ module AudioController
     output logic [31:0] data_sig    // FIFO data input
 );
     parameter [4:0] dataLength = 5'd16; // Bit depth is 16 bits.
-    
-    logic writingBlocked = 1'b0;
 
     reg [4:0] left_counter = 5'd0;      // Counters for each audio channel.
     reg [4:0] right_counter = 5'd0;
