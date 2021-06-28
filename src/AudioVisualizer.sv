@@ -68,10 +68,8 @@ module AudioVisualizer
             ram_rdaddress_sig   <= address_counter;
 
             case (counter)
-					// begin case at three because it takes 3 clocksignals before ram is read;
-                5'd3:   begin
-                            height[counter - 3]   = ram_q_sig;
-                        end
+					 // begin case at three because it takes 3 clocksignals before ram is read;
+                5'd3:   height[counter - 3]   = ram_q_sig;
                 5'd4:   height[counter - 3]   = ram_q_sig;
                 5'd5:   height[counter - 3]   = ram_q_sig;
                 5'd6:   height[counter - 3]   = ram_q_sig;

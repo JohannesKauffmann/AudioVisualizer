@@ -2,16 +2,16 @@ module VGA_Controller
 (
     input   logic   CLK,
                     VGA_CLK,
-                    
-                    control_bit,
-    
-    input logic [5:0] height[19:0],
 
+                    control_bit,
+
+    input logic [5:0] height[19:0],
+	 
     output  logic   ADV_BLANK_N,
                     ADV_SYNC_N,
                     VGA_HS,
                     VGA_VS,
-            
+	 //colour for each pixel
     output logic [7:0] VGA_R,
     output logic [7:0] VGA_G,
     output logic [7:0] VGA_B
@@ -47,6 +47,7 @@ module VGA_Controller
 
         if (h_counter_in == H_TOTAL - 1 && v_counter_in == V_TOTAL - 1)
         begin
+				//set array in a or b depending on height select in and happens at end of each frame
             if (height_select_in)
                 sound_height_a <= sound_height_in;
             else
@@ -123,11 +124,13 @@ module VGA_Controller
         logic [9:0] calculated_end_y    = 10'd0;
         logic [5:0] local_sound_height [19:0];
         
+		  //use different array depending on height_select_in
         if (height_select_in)
             local_sound_height = sound_height_a;
         else
             local_sound_height = sound_height_b;
 
+		  //loop to calculate canvas
         for (int j = 0; j < 20; j = j + 1)
         begin
             begin
