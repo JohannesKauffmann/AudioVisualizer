@@ -39,9 +39,6 @@ module AudioVisualizer
     wire [31:0] data_sig, q_sig;    // Wires used to connect the FIFO input and output data
     wire data_back, wrreq_sig, rdreq_sig;
 
-    // majority3 function
-//    assign f = (x1 && x2) || (x2 && x3) || (x1 && x3);
-
     // PLL for the VGA clock and Audio master clock
     pll pll_inst (
         .inclk0 (CLOCK_50),
@@ -117,9 +114,7 @@ module AudioVisualizer
             ram_rdaddress_sig   <= address_counter;
 
             case (counter)
-//                5'd0:   begin
-//                            
-//                        end
+					// begin case at three because it takes 3 clocksignals before ram is red;
                 5'd3:   begin
                             height[counter - 3]   = ram_q_sig;
                         end
@@ -129,8 +124,8 @@ module AudioVisualizer
                 5'd7:   height[counter - 3]   = ram_q_sig;
                 5'd8:   height[counter - 3]   = ram_q_sig;
                 5'd9:   height[counter - 3]   = ram_q_sig;
-                5'd10:   height[counter - 3]   = ram_q_sig;
-                5'd11:   height[counter - 3]   = ram_q_sig;
+                5'd10:  height[counter - 3]   = ram_q_sig;
+                5'd11:  height[counter - 3]   = ram_q_sig;
                 5'd12:  height[counter - 3]   = ram_q_sig;
                 5'd13:  height[counter - 3]   = ram_q_sig;
                 5'd14:  height[counter - 3]   = ram_q_sig;
