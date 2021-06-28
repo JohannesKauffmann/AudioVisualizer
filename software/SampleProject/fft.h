@@ -1,7 +1,12 @@
 #ifndef FFT_H
 #define FFT_H
 
-double getPi();
-float* ComplexFFT(float *data, unsigned long number_of_samples, unsigned int sample_rate, int sign);
+#include <complex>
+
+using namespace std;
+
+#define SAMPLE_SIZE 512
+
+void FFT(complex<float>* f, int N, double d);
 
 #endif

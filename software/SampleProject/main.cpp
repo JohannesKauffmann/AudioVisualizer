@@ -1,101 +1,27 @@
 #include "altera_avalon_pio_regs.h"
 #include "system.h"
-#include "sys/alt_stdio.h"
 
-#include <stdio.h>
-#include <complex>
+#include "fft.h"
 
 #include <math.h>
+#include <stdio.h>
 #include <string.h>
 
-#define SAMPLE_SIZE 512
-
-using namespace std;
-
-#define M_PI 3.1415926535897932384
-
-int log2(int N)    /*function to calculate the log2(.) of int numbers*/
-{
-  int k = N, i = 0;
-  while(k) {
-    k >>= 1;
-    i++;
-  }
-  return i - 1;
-}
-
-int check(int n)    //checking if the number of element is a power of 2
-{
-  return n > 0 && (n & (n - 1)) == 0;
-}
-
-int reverse(int N, int n)    //calculating revers number
-{
-  int j, p = 0;
-  for(j = 1; j <= log2(N); j++) {
-    if(n & (1 << (log2(N) - j)))
-      p |= 1 << (j - 1);
-  }
-  return p;
-}
-
-void ordina(complex<float>* f1, int N) //using the reverse order in the array
-{
-  complex<float> f2[SAMPLE_SIZE];
-  for(int i = 0; i < N; i++)
-    f2[i] = f1[reverse(N, i)];
-  for(int j = 0; j < N; j++)
-    f1[j] = f2[j];
-}
-
-void transform(complex<float>* f, int N) //
-{
-  ordina(f, N);    //first: reverse order
-  complex<float> *W;
-  W = (complex<float> *)malloc(N / 2 * sizeof(complex<float>));
-  W[1] = polar(1., -2. * M_PI / N);
-  W[0] = 1;
-  for(int i = 2; i < N / 2; i++)
-    W[i] = pow(W[1], i);
-  int n = 1;
-  int a = N / 2;
-  for(int j = 0; j < log2(N); j++) {
-    for(int i = 0; i < N; i++) {
-      if(!(i & n)) {
-        complex<float> temp = f[i];
-        complex<float> Temp = W[(i * a) % (n * a)] * f[i + n];
-        f[i] = temp + Temp;
-        f[i + n] = temp - Temp;
-      }
-    }
-    n *= 2;
-    a = a / 2;
-  }
-  free(W);
-}
-
-void FFT(complex<float>* f, int N, double d)
-{
-  transform(f, N);
-  for(int i = 0; i < N; i++)
-    f[i] *= d; //multiplying by step
-}
-
-//#define y 3.91588 //log 1,44025(x). Berekend middels z^19 = SAMPLE_SIZE / 2. z = 1,29094. Dus y * log(x) == log 1,29094(x)	//samplesize=256 mist frequencyindex 2
-//#define y 3.0457 //log 1,38865(x). Berekend middels z^19 = SAMPLE_SIZE / 2. z = 1,38865. Dus y * log(x) == log 1,38865(x)		//samplesize=1024
 #define y 3.60672 //log 1,31951(x). Berekend middels z^20 = SAMPLE_SIZE / 2. z = 1,31951. Dus y * log(x) == log 1,31951(x)		//samplesize=512
 
 #define AMPLITUDE_REFERENCE 3700000
 
-void calculateMagnitude(complex<float>* f, float *decibels, alt_u8 *frequencyIndex, alt_u8 *chart_data, size_t length)
+void calculateChartData(complex<float>* f, float *decibels, alt_u8 *frequencyIndex, alt_u8 *chart_data, size_t length)
 {
 	alt_u8 counter = 0; 		// Keeps track of which horizontal square we are in. values >= 0, < 20.
 	alt_8 max_db = INT8_MIN;	// Db values are negative from -80 to 0, so any value should be larger than int8_min.
-//	alt_8 avg_db = INT8_MIN;
 
-    for (int i = 0; i < length; i++)
+    for (size_t i = 0; i < length; i++)
     {
+    	// Calculate decibel from amplitude.
     	float amplitude = sqrtf(pow(f[i].real(), 2) + pow(f[i].imag(), 2));
+
+    	//power_db = 20 * log10(amp / amp_ref);
     	float calculated_db = 20 * (log10 (amplitude / AMPLITUDE_REFERENCE));
 
     	if (calculated_db < -80)
@@ -106,18 +32,17 @@ void calculateMagnitude(complex<float>* f, float *decibels, alt_u8 *frequencyInd
     	{
     		decibels[i] = calculated_db;
     	}
-    	//power_db = 20 * log10(amp / amp_ref);
 
-    	// Check if next value is in next horizontal square.
+    	// Check if current index lies in next horizontal square.
     	alt_u8 tmp_counter = frequencyIndex[i];
 
     	if (tmp_counter > counter)
     	{
     		counter = tmp_counter;
     		max_db = INT8_MIN; // Reset maximum db.
-//    		avg_db = INT8_MIN;
     	}
 
+    	// Take the maximum decibel for each horizontal square.
     	if (decibels[i] > max_db)
     	{
     		max_db = decibels[i];
@@ -126,9 +51,10 @@ void calculateMagnitude(complex<float>* f, float *decibels, alt_u8 *frequencyInd
     }
 }
 
-void calculateFrequencyIndex(alt_u8 *array, size_t length)
+void initializeFrequencyIndex(alt_u8 *array, size_t length)
 {
-	for (int i = 0; i < length; i++)
+	// Fill the frequency index array with index values, logarithmically.
+	for (size_t i = 0; i < length; i++)
 	{
     	if (i < 2)
     	{
@@ -136,60 +62,62 @@ void calculateFrequencyIndex(alt_u8 *array, size_t length)
     	}
     	else
     	{
-//    		array[i] = (alt_u8) roundf( y * logf(i) );
-    		array[i] = (alt_u8) floorf( y * logf(i) ); //floor alleen met z^20 ipv 19.
+    		array[i] = (alt_u8) floorf( y * logf(i) ); //floorf alleen met z^20 ipv 19.
     	}
 	}
 }
 
 int main()
 {
-	printf("Hello!!\n");
+	printf("Welcome to the AudioVisualiser!\n");
 
-	alt_u8 readRequest = 0;
-	alt_u8 empty = 0;
-	alt_32 aud_data = 0;
+	alt_u16 counter = 0; // Keeps track of amount of samples read.
 
-	complex<float> samples_f[SAMPLE_SIZE] = { 0 };
-	float decibels[SAMPLE_SIZE / 2] = { 0 };
-	alt_u8 frequencyIndex[SAMPLE_SIZE / 2] = { 0 };
-	alt_u8 chart_data[20] = { 0 };
-//	alt_u8 chart_data[20] = { 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48 };
+	complex<float> samples_f[SAMPLE_SIZE] = { 0 };	// Used to store results from the FFT.
+	float decibels[SAMPLE_SIZE / 2] = { 0 };		// Stores calculated decibel values.
+	alt_u8 frequencyIndex[SAMPLE_SIZE / 2] = { 0 };	// List with horizontal values between 0 and 19, spread logarithmically.
+	alt_u8 chart_data[20] = { 0 };					// Stores vertical chart height values.
 
-	calculateFrequencyIndex(frequencyIndex, SAMPLE_SIZE / 2);
-
-	alt_u16 counter = 0;
-
-	alt_u32 getal = 0;
+	// Initializes the frequencyIndex array with horizontal values between 0 and 19, spread logarithmically.
+	initializeFrequencyIndex(frequencyIndex, SAMPLE_SIZE / 2);
 
 	while (1)
 	{
-		empty = IORD_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDEMPTY_BASE);
+		alt_u8 empty = IORD_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDEMPTY_BASE);
 
+		// Read from the FIFO if it's not empty.
 		if (empty == 0)
 		{
-			readRequest = 1;
-			IOWR_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDREQ_BASE, readRequest);
+			// Assert the readrequest.
+			IOWR_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDREQ_BASE, 1);
 
-			aud_data = IORD_ALTERA_AVALON_PIO_DATA(PIO_FIFO_Q_BASE);
+			// Read the left and right channel data from the FIFO.
+			alt_32 aud_data = IORD_ALTERA_AVALON_PIO_DATA(PIO_FIFO_Q_BASE);
 
+			// Only look at the right channel - for now - and store the data.
 			alt_16 local = aud_data & 0x0000FFFF;
 
 			samples_f[counter] = (complex<float>) local;
 			counter++;
 
-			readRequest = 0;
-			IOWR_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDREQ_BASE, readRequest);
+			// Deassert the readrequest.
+			IOWR_ALTERA_AVALON_PIO_DATA(PIO_FIFO_RDREQ_BASE, 0);
 		}
 
+		// Check if we already have enough samples.
 		if (counter + 1 == SAMPLE_SIZE)
-		{IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 0);
+		{
+			// Indicate that data is about to be updated.
+			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 0);
 
+			// Run the FFT over the current samples.
 			FFT(samples_f, (int) SAMPLE_SIZE, 1.0);
 
-			calculateMagnitude(samples_f, decibels, frequencyIndex, chart_data, SAMPLE_SIZE / 2);
+			// Populate the chartdata from the FFT results and clear the results afterwards.
+			calculateChartData(samples_f, decibels, frequencyIndex, chart_data, SAMPLE_SIZE / 2);
 			memset(samples_f, 0, sizeof(complex<float>) * SAMPLE_SIZE);
 
+			// Write the results to the on-chip RAM.
 			for (int i = 0; i < 20; i++)
 			{
 				IOWR_ALTERA_AVALON_PIO_DATA(PIO_RAM_WRADDRESS_BASE, (alt_u8) i);
@@ -198,13 +126,11 @@ int main()
 				IOWR_ALTERA_AVALON_PIO_DATA(PIO_RAM_WREN_BASE, 0);
 			}
 
+			// Indicate that data is updated and reset the counter.
 			IOWR_ALTERA_AVALON_PIO_DATA(PIO_DATA_BACK_BASE, 1);
-
 			counter = 0;
-//			getal = samples_f[0].real();
-			getal = decibels[0];
 		}
 	}
 
-	return (int) getal + (int) decibels[0] + (int) samples_f[0].real() + (int) chart_data[0];
+	return (int) decibels[0] + (int) samples_f[0].real() + (int) chart_data[0]; // To prevent optimizing away variables.
 }
