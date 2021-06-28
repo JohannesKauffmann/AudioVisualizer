@@ -19,20 +19,9 @@ module AudioController
     reg [4:0] right_counter = 5'd0;
     logic [31:0] audio_data = 0;              // 16 MSBs hold left channel data, 16 LSBs hold right channel data.
 
-//    always_ff @ (posedge AUD_ADC_CLK)
-//    begin
-//        audio_data <= audio_data + 1;
-//    end
-
     always_ff @ (posedge AUD_BCLK)
     begin
         data_sig <= audio_data;
-    
-//        if (wrfull_sig == 1'b1)
-//            writingBlocked = 1'b1;
-//        
-//        if (wrempty_sig == 1'b1)
-//            writingBlocked = 1'b0;
 
         // Depending on the left/right channel, increment counter for current channel
         // and reset the counter for the other channel.
@@ -60,7 +49,6 @@ module AudioController
             end
 
             // Write data to FIFO after last bit has been received
-//            if (right_counter == dataLength && wrfull_sig == 1'b0 && writingBlocked == 1'b0)
             if (right_counter == dataLength && wrfull_sig == 1'b0)
             begin
                 wrreq_sig <= 1'b1;

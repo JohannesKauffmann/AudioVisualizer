@@ -25,27 +25,6 @@ module VGA_Controller
     logic [5:0] sound_height_a[19:0];
     logic [5:0] sound_height_b[19:0];
     logic [5:0] sound_height_in[19:0];
-	 
-//	 assign sound_height[0] = 6'd48;
-//	 assign sound_height[1] = 6'd48;
-//     assign sound_height[2] = 6'd48;
-//     assign sound_height[3] = 6'd48;
-//     assign sound_height[4] = 6'd48;
-//     assign sound_height[5] = 6'd48;
-//     assign sound_height[6] = 6'd48;
-//     assign sound_height[7] = 6'd48;
-//     assign sound_height[8] = 6'd48;
-//     assign sound_height[9] = 6'd48;
-//     assign sound_height[10] = 6'd48;
-//     assign sound_height[11] = 6'd48;
-//     assign sound_height[12] = 6'd48;
-//     assign sound_height[13] = 6'd48;
-//     assign sound_height[14] = 6'd48;
-//     assign sound_height[15] = 6'd48;
-//     assign sound_height[16] = 6'd48;
-//     assign sound_height[17] = 6'd48;
-//     assign sound_height[18] = 6'd48;
-//     assign sound_height[19] = 6'd48;
     
     logic VGA_HS_in, VGA_VS_in, ADV_BLANK_N_in, height_select, height_select_in, control_bit_in;
     logic [9:0] h_counter, h_counter_in;
@@ -180,7 +159,7 @@ module VGA_Controller
 								//y_pos - 30 is the start of the gradient. everything before y = 30 is completely red
 								//69 is the range of the gradient. gradient starts at 30 and ends at 99
 								//256 is used to convert the value from being in the blue range to green
-								//RGB --> B = 24'h000075 * 256 = 24'h007500 = G --> RGB
+								//RGB --> B = 24'h000075 * 256 = 24'h007500 = B --> G --> RGB
 								//blue isn't calculated during the calculation because it should be 00
 								
 								return 16711680 + (117 * (y_pos - 30) / 69 * 256);
